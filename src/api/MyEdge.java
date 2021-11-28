@@ -55,4 +55,16 @@ public class MyEdge implements EdgeData {
     public String toString() {
         return this.info;
     }
+
+    public MyEdge copy() {
+        MyEdge tempedge = new MyEdge(this.getSrc(), this.getDest(), this.tag, this.weight);
+        tempedge.setInfo(this.info);
+        return tempedge;
+    }
+
+    public MyEdge reversedEdge() {
+        MyEdge tempedge = new MyEdge(this.getDest(), this.getSrc(), this.tag, this.weight);
+        tempedge.setInfo("[Edge: from: "+pair.getRight()+" to: "+pair.getLeft()+" color: "+tag+" weight: "+weight+"]");
+        return tempedge;
+    }
 }

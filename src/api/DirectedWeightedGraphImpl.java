@@ -1,9 +1,8 @@
 package api;
 
 import javax.swing.text.html.HTMLDocument;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     private HashMap<Integer, MyNode> graph;
@@ -47,22 +46,38 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     @Override
     public Iterator<NodeData> nodeIter() {
         int temp = MC;
-        return null;
+        ArrayList<NodeData> arr = new ArrayList<>();
+        for (Map.Entry<Integer, MyNode> me : graph.entrySet()) {
+            arr.add(me.getValue());
+        }
+        return arr.iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return null;
+        ArrayList<EdgeData> arr = new ArrayList<>();
+        Iterator<NodeData> iter = this.nodeIter();
+        while (iter.hasNext()) {
+            MyNode temp = (MyNode) iter.next();
+            for (Map.Entry<MyPair, MyEdge> ME : temp.getEdges().entrySet()) {
+                arr.add(ME.getValue());
+            }
+        }
+        return arr.iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return null;
+        ArrayList<EdgeData> arr = new ArrayList<>();
+        MyNode temp = graph.get(node_id);
+        for (Map.Entry<MyPair, MyEdge> ME : temp.getEdges().entrySet()) {
+            arr.add(ME.getValue());
+        }
+        return arr.iterator();
     }
 
     @Override
     public NodeData removeNode(int key) {
-    //    Set<Map.Entry<MyPair, MyEdge>> map = graph.get(key).getEdges().entrySet();
         for (Map.Entry<MyPair, MyEdge> E: graph.get(key).getEdges().entrySet()) {
             if (E.getValue().getSrc() == key) {
                 graph.get(E.getValue().getDest()).removeEdge(new MyPair(E.getValue().getSrc(), E.getValue().getDest()));
@@ -107,11 +122,26 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         return st;
     }
 
-    public void printgraph() {
-        System.out.println("- - - - - Graph - - - - -");
+    public void printGraph() {
+        System.out.println("Graph - start");
         for (Map.Entry<Integer, MyNode> n : graph.entrySet()) {
+            System.out.print(n.getValue().getKey());
             System.out.println(n.getValue().getEdges());
         }
-        System.out.println("- - - - - Graph - - - - -");
+        System.out.println("Graph - end");
+    }
+
+    public HashMap<Integer, MyNode> getMap() {
+        return this.graph;
+    }
+
+
+    public DirectedWeightedGraphImpl reverseGraph() {
+        DirectedWeightedGraphImpl reversedGraph = new DirectedWeightedGraphImpl();
+        for (Map.Entry<Integer, MyNode> ME : this.getMap().entrySet()) {
+            MyNode temp_node = ME.getValue().reversed();
+            reversedGraph.addNode(temp_node);
+        }
+        return reversedGraph;
     }
 }
