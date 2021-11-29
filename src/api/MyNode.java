@@ -127,7 +127,7 @@ public class MyNode implements NodeData {
     }
 
     public String toString() {
-        return "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag+"D_Time: "+discovery_time+" F_Time: "+finish_time+" dist:"+this.dist;
+        return "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag+" D_Time: "+discovery_time+" F_Time: "+finish_time+" dist:"+this.dist;
     }
 
     public MyEdge removeEdge(MyPair p) {

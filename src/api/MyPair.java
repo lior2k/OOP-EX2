@@ -37,10 +37,4 @@ public class MyPair {
     public int hashCode() {
         return Objects.hashCode(this.right) + Objects.hashCode(this.left);
     }
-
-    public void reverse() {
-        int temp = this.left;
-        this.left = this.right;
-        this.right = temp;
-    }
 }

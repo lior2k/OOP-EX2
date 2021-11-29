@@ -50,19 +50,24 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        List<NodeData> list = shortestPath(src,dest);
-        double ans = 0;
-        for (NodeData n : list) {
-            ans = ans + n.getWeight();
+        shortestPath(src,dest);
+        MyNode temp = (MyNode) graph.getNode(dest);
+        if (temp.getDist() == Integer.MAX_VALUE) {
+            return -1;
         }
-        return ans;
+        return temp.getDist();
     }
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         List<NodeData> list = new LinkedList<>();
-        BFS((MyNode) graph.getNode(src));
+        Dijkstra((MyNode) graph.getNode(src));
         MyNode temp = (MyNode) graph.getNode(dest);
+        if (temp.getDist() == Integer.MAX_VALUE) {
+            return null;
+        }
+        //add nodes destnode -> destnodeprev -> ... -> src
+        list.add(temp);
         while (temp.getKey() != src) {
             list.add(temp.getPrev());
             temp = temp.getPrev();
@@ -73,6 +78,9 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         while (size >= 0) {
             ans.add(list.get(size));
             size--;
+        }
+        if (ans.size() == 0) {
+            return null;
         }
         return ans;
     }
@@ -202,64 +210,77 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         arr[i] = temp;
     }
 
-    public void BFS(MyNode S) {
+    public void Dijkstra(MyNode S) {
         List<NodeData> Que = new LinkedList<>();
         Iterator<NodeData> iter = this.graph.nodeIter();
         while (iter.hasNext()) {
             MyNode n = (MyNode) iter.next();
-            n.setTag(White);
             n.setDist(Integer.MAX_VALUE);
             n.setPrev(null);
+            Que.add(n);
         }
-        S.setTag(Grey);
         S.setDist(0);
-        Que.add(S);
         while (Que.size() > 0) {
-            MyNode U = (MyNode) Que.get(0);
-            Que.remove(0);
+            int node_index = getMinDistNodeIndex(Que);
+            if (node_index == -1) {
+                break;
+            }
+            MyNode U = (MyNode) Que.get(node_index);
+            Que.remove(node_index);
             for (Map.Entry<MyPair, MyEdge> ME : U.getEdges().entrySet()) {
-                if (ME.getValue().getSrc() != U.getKey()) {
-                    MyNode V = (MyNode) this.graph.getNode(ME.getValue().getDest());
-                    if (V.getTag() == White) {
-                        V.setTag(Grey);
-                        Que.add(V);
-                        if (V.getDist() > ME.getValue().getWeight() + U.getDist()) {
-                            V.setDist(ME.getValue().getWeight() + U.getDist());
+                if (ME.getValue().getSrc() == U.getKey()) {
+                    MyNode V = (MyNode) graph.getNode(ME.getValue().getDest());
+                    if (Que.contains(V)) {
+                        double temp = U.getDist() + graph.getEdge(U.getKey(), V.getKey()).getWeight();
+                        if (V.getDist() > temp) {
+                            V.setDist(temp);
                             V.setPrev(U);
                         }
                     }
                 }
             }
-            U.setTag(Black);
         }
     }
 
-    public List<NodeData> Dijkstra(MyNode S) {
-        List<NodeData> ans = new LinkedList<>();
-        List<NodeData> Que = new LinkedList<>();
-        Iterator<NodeData> iter = this.graph.nodeIter();
-        while (iter.hasNext()) {
-            MyNode n = (MyNode) iter.next();
-            n.setTag(White);
-            n.setDist(Integer.MAX_VALUE);
-        }
-        S.setTag(Grey);
-        S.setDist(0);
-        Que.add(S);
-        while (Que.size() > 0) {
-            MyNode U = (MyNode) Que.get(0);
-            Que.remove(0);
-            for (Map.Entry<MyPair, MyEdge> ME : U.getEdges().entrySet()) {
-                if (ME.getValue().getSrc() != U.getKey()) {
-                    MyNode V = (MyNode) this.graph.getNode(ME.getValue().getDest());
-                    if (V.getTag() == White) {
-                        V.setTag(Grey);
-                        V.setDist(U.getDist() + 1);
-                        Que.add(V);
-                    }
-                }
+//    public void BFS(MyNode S) {
+//        List<NodeData> Que = new LinkedList<>();
+//        Iterator<NodeData> iter = this.graph.nodeIter();
+//        while (iter.hasNext()) {
+//            MyNode n = (MyNode) iter.next();
+//            n.setTag(White);
+//            n.setDist(Integer.MAX_VALUE);
+//            n.setPrev(null);
+//        }
+//        S.setTag(Grey);
+//        S.setDist(0);
+//        Que.add(S);
+//        while (Que.size() > 0) {
+//            MyNode U = (MyNode) Que.get(0);
+//            Que.remove(0);
+//            for (Map.Entry<MyPair, MyEdge> ME : U.getEdges().entrySet()) {
+//                if (ME.getValue().getSrc() == U.getKey()) {
+//                    MyNode V = (MyNode) this.graph.getNode(ME.getValue().getDest());
+//                    if (V.getTag() == White) {
+//                        V.setTag(Grey);
+//                        V.setDist(U.getDist() + 1);
+//                        V.setPrev(U);
+//                        Que.add(V);
+//                    }
+//                }
+//            }
+//            U.setTag(Black);
+//        }
+//    }
+
+    public int getMinDistNodeIndex(List<NodeData> L) {
+        int ans = -1;
+        double dist = Integer.MAX_VALUE;
+        for (int i = 0; i < L.size(); i++) {
+            MyNode temp = (MyNode) L.get(i);
+            if (temp.getDist() < dist) {
+                dist = temp.getDist();
+                ans = i;
             }
-            U.setTag(Black);
         }
         return ans;
     }
