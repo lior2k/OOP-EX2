@@ -15,6 +15,8 @@ public class MyNode implements NodeData {
     private int out_degree;
     private int discovery_time;
     private int finish_time;
+    private double dist;
+    private MyNode prev;
 
     public MyNode(int k, GeoLocation g, double w, int tag) {
         this.key = k;
@@ -27,6 +29,7 @@ public class MyNode implements NodeData {
         this.out_degree = 0;
         this.discovery_time = 0;
         this.finish_time = 0;
+        this.dist = 0;
     }
 
     @Override
@@ -94,6 +97,22 @@ public class MyNode implements NodeData {
         this.finish_time = time;
     }
 
+    public double getDist() {
+        return this.dist;
+    }
+
+    public void setDist(double dist) {
+        this.dist = dist;
+    }
+
+    public MyNode getPrev() {
+        return this.prev;
+    }
+
+    public void setPrev(MyNode prev) {
+        this.prev = prev;
+    }
+
     public void addEdge(MyEdge E) {
         if (E.getSrc() == this.key) {
             this.out_degree++;
@@ -108,8 +127,7 @@ public class MyNode implements NodeData {
     }
 
     public String toString() {
-        return "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag+" in_deg: "+in_degree+"" +
-                " out_deg: "+out_degree+" D_Time: "+discovery_time+" F_Time: "+finish_time;
+        return "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag+"D_Time: "+discovery_time+" F_Time: "+finish_time+" dist:"+this.dist;
     }
 
     public MyEdge removeEdge(MyPair p) {
