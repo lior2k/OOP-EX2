@@ -31,11 +31,10 @@ public class GeoLocationImpl implements GeoLocation {
         double dx = (this.x - g.x())*(this.x - g.x());
         double dy = (this.y - g.x())*(this.x - g.y());
         double dz = (this.z - g.x())*(this.x - g.z());
-        double dist = Math.sqrt((dx*dx)+(dy*dy)+(dz*dz));
-        return dist;
+        return Math.sqrt((dx*dx)+(dy*dy)+(dz*dz));
     }
 
     public String toString() {
-        return "("+x+", "+y+", "+z+")";
+        return x+","+y+","+z;
     }
 }

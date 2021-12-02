@@ -1,7 +1,5 @@
 package api;
 
-import javax.swing.text.html.HTMLDocument;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
@@ -36,16 +34,16 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public void connect(int src, int dest, double w) {
-        EdgeData E = new MyEdge(src, dest, 255, w);
-        graph.get(src).addEdge((MyEdge) E);
-        graph.get(dest).addEdge((MyEdge) E);
+        MyEdge E = new MyEdge(src, dest, 255, w);
+        graph.get(src).addEdge(E);
+        graph.get(dest).addEdge(E);
         edge_size++;
         MC++;
     }
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        int temp = MC;
+        //int temp = MC;
         ArrayList<NodeData> arr = new ArrayList<>();
         for (Map.Entry<Integer, MyNode> me : graph.entrySet()) {
             arr.add(me.getValue());
@@ -118,8 +116,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     }
 
     public String toString() {
-        String st = "node_size: "+node_size+", edge_size: "+edge_size+", "+graph.toString();
-        return st;
+        return "node_size: "+node_size+", edge_size: "+edge_size+", "+graph.toString();
     }
 
     public void printGraph() {
@@ -136,12 +133,12 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     }
 
 
-    public DirectedWeightedGraphImpl reverseGraph() {
-        DirectedWeightedGraphImpl reversedGraph = new DirectedWeightedGraphImpl();
-        for (Map.Entry<Integer, MyNode> ME : this.getMap().entrySet()) {
-            MyNode temp_node = ME.getValue().reversed();
-            reversedGraph.addNode(temp_node);
-        }
-        return reversedGraph;
-    }
+//    public DirectedWeightedGraphImpl reverseGraph() {
+//        DirectedWeightedGraphImpl reversedGraph = new DirectedWeightedGraphImpl();
+//        for (Map.Entry<Integer, MyNode> ME : this.getMap().entrySet()) {
+//            MyNode temp_node = ME.getValue().reversed();
+//            reversedGraph.addNode(temp_node);
+//        }
+//        return reversedGraph;
+//    }
 }

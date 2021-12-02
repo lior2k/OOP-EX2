@@ -22,14 +22,18 @@ public class tests {
         G1.addNode(V3);
         G1.connect(0,1,2);
         G1.connect(1,2,3);
-    //    G1.connect(2,3,4);
-    //    G1.connect(0,3,15);
+        G1.connect(2,3,4);
+        G1.connect(0,3,15);
 
         DirectedWeightedGraphAlgorithmsImpl Algo = new DirectedWeightedGraphAlgorithmsImpl(G1);
-    //    Algo.Dijkstra((MyNode) G1.getNode(0));
-    //    System.out.println(G1);
+        Algo.Dijkstra((MyNode) G1.getNode(0));
+        System.out.println(G1);
         System.out.println(Algo.shortestPath(0,3));
         System.out.println(Algo.shortestPathDist(0,3));
+
+        Algo.save("testgraph.json");
+
+
 //
 //        MyNode copiednode = V0.copy();
 //        System.out.println(copiednode == V0);

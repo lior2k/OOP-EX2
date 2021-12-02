@@ -1,11 +1,10 @@
 package api;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class MyNode implements NodeData {
-    private int key;
+    private final int key;
     private GeoLocation location;
     private double weight;
     private int tag;

@@ -26,9 +26,7 @@ public class MyPair {
     @Override
     public boolean equals(Object p){
         if (p instanceof MyPair) {
-            if (this.right == ((MyPair) p).getRight() && this.left == ((MyPair) p).getLeft()) {
-                return true;
-            }
+            return this.right == ((MyPair) p).getRight() && this.left == ((MyPair) p).getLeft();
         }
         return false;
     }
