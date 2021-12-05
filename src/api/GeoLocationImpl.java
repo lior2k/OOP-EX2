@@ -37,4 +37,8 @@ public class GeoLocationImpl implements GeoLocation {
     public String toString() {
         return x+","+y+","+z;
     }
+
+    public GeoLocationImpl copy() {
+        return new GeoLocationImpl(this.x, this.y, this.z);
+    }
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class MyNode implements NodeData {
     private final int key;
-    private GeoLocation location;
+    private GeoLocationImpl location;
     private double weight;
     private int tag;
     private String info;
@@ -19,7 +19,7 @@ public class MyNode implements NodeData {
 
     public MyNode(int k, GeoLocation g, double w, int tag) {
         this.key = k;
-        this.location = g;
+        this.location = (GeoLocationImpl) g;
         this.weight = w;
         this.tag = tag;
         this.info = "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag+" in_deg: "+in_degree+" out_deg: "+out_degree;
@@ -43,7 +43,7 @@ public class MyNode implements NodeData {
 
     @Override
     public void setLocation(GeoLocation p) {
-        this.location = p;
+        this.location = (GeoLocationImpl) p;
     }
 
     @Override
@@ -140,9 +140,13 @@ public class MyNode implements NodeData {
     }
 
     public MyNode copy() {
-        MyNode temp_node = new MyNode(this.key, this.location, this.weight, this.tag);
+        MyNode temp_node = new MyNode(this.key, this.location.copy(), this.weight, this.tag);
         temp_node.in_degree = this.in_degree;
         temp_node.out_degree = this.out_degree;
+        temp_node.discovery_time = this.discovery_time;
+        temp_node.finish_time = this.finish_time;
+        temp_node.prev = this.prev;
+        temp_node.dist = this.dist;
         temp_node.setInfo(this.info);
         for (Map.Entry<MyPair, MyEdge> me : this.edges.entrySet()) {
             MyEdge temp_edge = me.getValue().copy();
@@ -152,17 +156,30 @@ public class MyNode implements NodeData {
     }
 
     public MyNode reversed() {
-        MyNode temp_node = new MyNode(this.key, this.location, this.weight, this.tag);
+        MyNode temp_node = new MyNode(this.key, this.location.copy(), this.weight, this.tag);
         temp_node.in_degree = this.in_degree;
         temp_node.out_degree = this.out_degree;
         temp_node.setInfo(this.info);
         temp_node.finish_time = this.finish_time;
         temp_node.discovery_time = this.discovery_time;
+        temp_node.prev = this.prev;
+        temp_node.dist = this.dist;
         for (Map.Entry<MyPair, MyEdge> me : this.edges.entrySet()) {
             MyEdge temp_edge = me.getValue().reversedEdge();
             temp_node.addEdge(temp_edge);
         }
         return temp_node;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof MyNode) {
+            if (((MyNode) obj).getKey() == this.key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }
