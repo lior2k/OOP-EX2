@@ -7,9 +7,9 @@ public class MyEdge implements EdgeData {
     private double weight;
     private String info;
 
-    public MyEdge(int src, int dest, int tag, double weight) {
+    public MyEdge(int src, int dest, double weight) {
         this.pair = new MyPair(src, dest);
-        this.tag = tag;
+        this.tag = 255;
         this.weight = weight;
         this.info = "[Edge: from: "+pair.getLeft()+" to: "+pair.getRight()+" color: "+tag+" weight: "+weight+"]";
     }
@@ -57,13 +57,13 @@ public class MyEdge implements EdgeData {
     }
 
     public MyEdge copy() {
-        MyEdge tempedge = new MyEdge(this.getSrc(), this.getDest(), this.tag, this.weight);
+        MyEdge tempedge = new MyEdge(this.getSrc(), this.getDest(), this.weight);
         tempedge.setInfo(this.info);
         return tempedge;
     }
 
     public MyEdge reversedEdge() {
-        MyEdge tempedge = new MyEdge(this.getDest(), this.getSrc(), this.tag, this.weight);
+        MyEdge tempedge = new MyEdge(this.getDest(), this.getSrc(), this.weight);
         tempedge.setInfo("[Edge: from: "+pair.getRight()+" to: "+pair.getLeft()+" color: "+tag+" weight: "+weight+"]");
         return tempedge;
     }

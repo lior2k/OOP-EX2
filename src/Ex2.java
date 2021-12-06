@@ -13,24 +13,11 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
-    private static DirectedWeightedGraphAlgorithmsImpl Algo;
-
-    public Ex2() {
-        this.Algo = new DirectedWeightedGraphAlgorithmsImpl();
-    }
-
-    public Ex2(DirectedWeightedGraphAlgorithmsImpl algo) {
-        this.Algo = algo;
-    }
-
-    public void init(String file) {
-        this.Algo.load(file);
-    }
 
     public static DirectedWeightedGraph getGrapg(String json_file) {
+        DirectedWeightedGraphAlgorithms Algo = new DirectedWeightedGraphAlgorithmsImpl();
         Algo.load(json_file);
-        DirectedWeightedGraph ans = Algo.getGraph();
-        return ans;
+        return Algo.getGraph();
     }
     /**
      * This static function will be used to test your implementation
@@ -38,8 +25,8 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
-        Algo.load(json_file);
-        DirectedWeightedGraphAlgorithms ans = Algo;
+        DirectedWeightedGraphAlgorithms ans = new DirectedWeightedGraphAlgorithmsImpl();
+        ans.load(json_file);
         return ans;
     }
     /**
@@ -52,9 +39,6 @@ public class Ex2 {
         Iterator<NodeData> iter = alg.getGraph().nodeIter();
         while (iter.hasNext()) {
             MyNode n = (MyNode) iter.next();
-            Color color = new Color(n.getTag());
-            StdDraw.setPenColor(color);
-            StdDraw.filledCircle(n.getLocation().x(), n.getLocation().y(), 0.1);
         }
 //        Graphics2D graph;
 //        // creating object of JFrame(Window popup)
@@ -75,8 +59,6 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
-        Ex2 test = new Ex2();
-        test.init("Assignments/Ex2/data/G2.json");
         runGUI("Assignments/Ex2/data/G2.json");
     }
 }

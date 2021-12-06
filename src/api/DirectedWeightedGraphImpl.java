@@ -3,15 +3,15 @@ package api;
 import java.util.*;
 
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
-    private HashMap<Integer, MyNode> graph;
+    private HashMap<Integer, NodeData> graph;
+    private HashMap<MyPair, EdgeData> all_edges;
     private int node_size;
-    private int edge_size;
     private int MC;
 
     public DirectedWeightedGraphImpl() {
         graph = new HashMap<>();
+        all_edges = new HashMap<>();
         node_size = 0;
-        edge_size = 0;
         MC = 0;
     }
 
@@ -22,70 +22,70 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return graph.get(src).getEdges().get(new MyPair(src,dest));
+        if (graph.get(src) == null) {
+            return null;
+        }
+        MyNode temp = (MyNode) graph.get(src);
+        return temp.getEdges().get(new MyPair(src,dest));
     }
 
     @Override
     public void addNode(NodeData n) {
-        graph.put(n.getKey(), (MyNode) n);
+        graph.put(n.getKey(), n);
         node_size++;
         MC++;
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-        MyEdge E = new MyEdge(src, dest, 255, w);
-        graph.get(src).addEdge(E);
-        graph.get(dest).addEdge(E);
-        edge_size++;
+        if (graph.get(src) == null || graph.get(dest) == null) {
+            return;
+        }
+        MyEdge E = new MyEdge(src, dest, w);
+        MyNode srcnode = (MyNode) graph.get(src);
+        MyNode destnode = (MyNode) graph.get(dest);
+        srcnode.addEdge(E);
+        destnode.addEdge(E);
+        all_edges.put(E.getPair(), E);
         MC++;
     }
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        //int temp = MC;
-        ArrayList<NodeData> arr = new ArrayList<>();
-        for (Map.Entry<Integer, MyNode> me : graph.entrySet()) {
-            arr.add(me.getValue());
-        }
-        return arr.iterator();
+        return graph.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        ArrayList<EdgeData> arr = new ArrayList<>();
-        Iterator<NodeData> iter = this.nodeIter();
-        while (iter.hasNext()) {
-            MyNode temp = (MyNode) iter.next();
-            for (Map.Entry<MyPair, MyEdge> ME : temp.getEdges().entrySet()) {
-                arr.add(ME.getValue());
-            }
-        }
-        return arr.iterator();
+        return all_edges.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        ArrayList<EdgeData> arr = new ArrayList<>();
-        MyNode temp = graph.get(node_id);
-        for (Map.Entry<MyPair, MyEdge> ME : temp.getEdges().entrySet()) {
-            arr.add(ME.getValue());
-        }
-        return arr.iterator();
+        MyNode n = (MyNode) graph.get(node_id);
+        return n.getEdges().values().iterator();
     }
 
     @Override
     public NodeData removeNode(int key) {
-        for (Map.Entry<MyPair, MyEdge> E: graph.get(key).getEdges().entrySet()) {
-            if (E.getValue().getSrc() == key) {
-                graph.get(E.getValue().getDest()).removeEdge(new MyPair(E.getValue().getSrc(), E.getValue().getDest()));
-            }
-            if (E.getValue().getDest() == key) {
-                graph.get(E.getValue().getSrc()).removeEdge(new MyPair(E.getValue().getSrc(), E.getValue().getDest()));
-            }
+        if (graph.get(key) == null) {
+            return null;
         }
-        MyNode V = graph.remove(key);
-        edge_size = edge_size - V.getDegree();
+
+        MyNode V = (MyNode) graph.get(key);
+        for (EdgeData E : V.getEdges().values()) {
+            MyPair p = new MyPair(E.getSrc(), E.getDest());
+            if (E.getSrc() == key) {
+                MyNode src_node = (MyNode) graph.get(E.getDest());
+                src_node.removeEdge(p);
+            }
+            if (E.getDest() == key) {
+                MyNode dest_node = (MyNode) graph.get(E.getSrc());
+                dest_node.removeEdge(p);
+            }
+            all_edges.remove(((MyEdge) E).getPair());
+        }
+        graph.remove(key);
         node_size--;
         MC++;
         return V;
@@ -93,9 +93,14 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        MyEdge E = graph.get(src).removeEdge(new MyPair(src,dest));
-        graph.get(dest).removeEdge(new MyPair(src,dest));
-        edge_size--;
+        if (graph.get(src) == null || graph.get(dest) == null) {
+            return null;
+        }
+        all_edges.remove(new MyPair(src,dest));
+        MyNode src_node = (MyNode) graph.get(src);
+        MyNode dest_node = (MyNode) graph.get(dest);
+        MyEdge E = src_node.removeEdge(new MyPair(src,dest));
+        dest_node.removeEdge(new MyPair(src,dest));
         MC++;
         return E;
     }
@@ -107,7 +112,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public int edgeSize() {
-        return this.edge_size;
+        return all_edges.size();
     }
 
     @Override
@@ -116,29 +121,15 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     }
 
     public String toString() {
-        return "node_size: "+node_size+", edge_size: "+edge_size+", "+graph.toString();
+        return "node_size: "+node_size+", edge_size: "+all_edges.size()+", "+graph.toString();
     }
 
     public void printGraph() {
         System.out.println("Graph - start");
-        for (Map.Entry<Integer, MyNode> n : graph.entrySet()) {
-            System.out.print(n.getValue().getKey());
-            System.out.println(n.getValue().getEdges());
+        for (NodeData n : graph.values()) {
+            System.out.println(n);
+            System.out.println(((MyNode) n).getEdges());
         }
         System.out.println("Graph - end");
     }
-
-    public HashMap<Integer, MyNode> getMap() {
-        return this.graph;
-    }
-
-
-//    public DirectedWeightedGraphImpl reverseGraph() {
-//        DirectedWeightedGraphImpl reversedGraph = new DirectedWeightedGraphImpl();
-//        for (Map.Entry<Integer, MyNode> ME : this.getMap().entrySet()) {
-//            MyNode temp_node = ME.getValue().reversed();
-//            reversedGraph.addNode(temp_node);
-//        }
-//        return reversedGraph;
-//    }
 }

@@ -1,15 +1,15 @@
 package api;
 
 import com.google.gson.*;
-import com.google.gson.stream.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
-    private DirectedWeightedGraph graph;
+    private DirectedWeightedGraphImpl graph;
     int Black = 0;
     int Grey = 153;
     int White = 255;
@@ -21,7 +21,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public void init(DirectedWeightedGraph g) {
-        this.graph = g;
+        this.graph = (DirectedWeightedGraphImpl) g;
     }
 
     @Override
@@ -84,30 +84,49 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         return ans;
     }
 
+//    @Override
+//    public NodeData center() {
+////        if (!isConnected()) {
+////            return null;
+////        }
+//        double shortest_dist = Integer.MAX_VALUE;
+//        NodeData ans = null;
+//        Iterator<NodeData> iter = graph.nodeIter();
+//        while (iter.hasNext()) {
+//            MyNode n = (MyNode) iter.next();
+//            Dijkstra(n);
+//            Iterator<NodeData> iter2 = graph.nodeIter();
+//            double max_dist = -1;
+//            while (iter2.hasNext()) {
+//                MyNode v = (MyNode) iter2.next();
+//                if (v.getDist() > max_dist) {
+//                    max_dist = v.getDist();
+//                }
+//            }
+//            if (max_dist < shortest_dist) {
+//                shortest_dist = max_dist;
+//                ans = n;
+//            }
+//        }
+//        return ans;
+//    }
     @Override
     public NodeData center() {
-        if (!isConnected()) {
-            return null;
-        }
+//        if (!isConnected()) {
+//            return null;
+//        }
         double shortest_dist = Integer.MAX_VALUE;
         NodeData ans = null;
         Iterator<NodeData> iter = graph.nodeIter();
         while (iter.hasNext()) {
             MyNode n = (MyNode) iter.next();
-            Dijkstra(n);
-            Iterator<NodeData> iter2 = graph.nodeIter();
-            double max_dist = -1;
-            while (iter2.hasNext()) {
-                MyNode v = (MyNode) iter2.next();
-                if (v.getDist() > max_dist) {
-                    max_dist = v.getDist();
-                }
-            }
+            double max_dist = Dijkstra_center(n);
             if (max_dist < shortest_dist) {
                 shortest_dist = max_dist;
                 ans = n;
             }
         }
+        System.out.println(shortest_dist);
         return ans;
     }
 
@@ -152,7 +171,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             i++;
         }
         i = 0;
-        //last while loop just to find the last node in cities that we didnt add to ans
+        //last while loop just to find the last node in cities that we didn't add to ans
         while (i < cities.size()) {
             if (!ans.contains(cities.get(i))) {
                 ans.add(cities.get(i));
@@ -164,19 +183,37 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public boolean save(String file) {
+        JsonObject JsonGraph = new JsonObject();
+        JsonArray nodesArr = new JsonArray();
+        JsonArray edgesArr = new JsonArray();
+        Iterator<NodeData> iter = graph.nodeIter();
+        while (iter.hasNext()) {
+            MyNode n = (MyNode) iter.next();
+            int key = n.getKey();
+            JsonObject JsonNode = new JsonObject();
+            JsonNode.addProperty("pos", n.getLocation().x()+","+n.getLocation().y()+","+n.getLocation().z());
+            JsonNode.addProperty("id", key);
+            nodesArr.add(JsonNode);
+            Iterator<EdgeData> edgeIter = graph.edgeIter(key);
+            while (edgeIter.hasNext()) {
+                MyEdge e = (MyEdge) edgeIter.next();
+                if (e.getSrc() == key) {
+                    JsonObject JsonEdge = new JsonObject();
+                    JsonEdge.addProperty("src", e.getSrc());
+                    JsonEdge.addProperty("w", e.getWeight());
+                    JsonEdge.addProperty("dest", e.getDest());
+                    edgesArr.add(JsonEdge);
+                }
+            }
+        }
+        JsonGraph.add("Edges", edgesArr);
+        JsonGraph.add("Nodes", nodesArr);
         try {
             FileWriter fw = new FileWriter(file);
-            Gson gson = new GsonBuilder().create();
-            Iterator<NodeData> iter = graph.nodeIter();
-            List<nodesToJson> nodes = new ArrayList<>();
-            while (iter.hasNext()) {
-                MyNode n = (MyNode) iter.next();
-                nodesToJson v = new nodesToJson(n.getKey(), n.getLocation().toString());
-                nodes.add(v);
-            }
-            graph g = new graph(nodes);
-            gson.toJson(g, fw);
-        } catch (Exception e) {
+            fw.write(String.valueOf(JsonGraph));
+            fw.flush();
+            fw.close();
+        } catch (IOException e){
             e.printStackTrace();
             return false;
         }
@@ -197,7 +234,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                 String st = obj.get("pos").getAsString();
                 String[] split = st.split(",");
                 GeoLocation location = new GeoLocationImpl(Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]));
-                MyNode n = new MyNode(obj.get("id").getAsInt(), location, 0, White);
+                MyNode n = new MyNode(obj.get("id").getAsInt(), location);
                 G.addNode(n);
             }
             for (JsonElement elem : edges) {
@@ -254,10 +291,11 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     public DirectedWeightedGraphImpl reverseGraph() {
         DirectedWeightedGraphImpl reversedGraph = new DirectedWeightedGraphImpl();
-        DirectedWeightedGraphImpl temp = (DirectedWeightedGraphImpl) this.getGraph();
-        for (Map.Entry<Integer, MyNode> ME : temp.getMap().entrySet()) {
-            MyNode temp_node = ME.getValue().reversed();
-            reversedGraph.addNode(temp_node);
+        Iterator<NodeData> iter = graph.nodeIter();
+        while (iter.hasNext()) {
+            MyNode temp = (MyNode) iter.next();
+            MyNode n = temp.reversed();
+            reversedGraph.addNode(n);
         }
         return reversedGraph;
     }
@@ -335,9 +373,9 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             }
             MyNode U = (MyNode) Que.get(node_index);
             Que.remove(node_index);
-            for (Map.Entry<MyPair, MyEdge> ME : U.getEdges().entrySet()) {
-                if (ME.getValue().getSrc() == U.getKey()) {
-                    MyNode V = (MyNode) graph.getNode(ME.getValue().getDest());
+            for (EdgeData E : U.getEdges().values()) {
+                if (E.getSrc() == U.getKey()) {
+                    MyNode V = (MyNode) graph.getNode(E.getDest());
                     if (Que.contains(V)) {
                         double temp = U.getDist() + graph.getEdge(U.getKey(), V.getKey()).getWeight();
                         if (V.getDist() > temp) {
@@ -367,9 +405,9 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             }
             MyNode U = (MyNode) Que.get(node_index);
             Que.remove(node_index);
-            for (Map.Entry<MyPair, MyEdge> ME : U.getEdges().entrySet()) {
-                if (ME.getValue().getSrc() == U.getKey()) {
-                    MyNode V = (MyNode) G.getNode(ME.getValue().getDest());
+            for (EdgeData E : U.getEdges().values()) {
+                if (E.getSrc() == U.getKey()) {
+                    MyNode V = (MyNode) G.getNode(E.getDest());
                     if (Que.contains(V)) {
                         double temp = U.getDist() + G.getEdge(U.getKey(), V.getKey()).getWeight();
                         if (V.getDist() > temp) {
@@ -380,6 +418,44 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                 }
             }
         }
+    }
+
+    public double Dijkstra_center(MyNode S) {
+
+        List<NodeData> Que = new LinkedList<>();
+        Iterator<NodeData> iter = this.graph.nodeIter();
+        while (iter.hasNext()) {
+            MyNode n = (MyNode) iter.next();
+            n.setDist(Integer.MAX_VALUE);
+            Que.add(n);
+        }
+        S.setDist(0);
+        double max_dist = -1;
+        while (Que.size() > 0) {
+            int node_index = getMinDistNodeIndex(Que);
+            if (node_index == -1) {
+                break;
+            }
+            MyNode U = (MyNode) Que.get(node_index);
+            Que.remove(node_index);
+            for (EdgeData E : U.getEdges().values()) {
+                if (E.getSrc() == U.getKey()) {
+                    MyNode V = (MyNode) graph.getNode(E.getDest());
+                    if (Que.contains(V)) {
+                        double temp = U.getDist() + graph.getEdge(U.getKey(), V.getKey()).getWeight();
+                        if (V.getDist() > temp) {
+                            V.setDist(temp);
+                            if (V.getDist() > max_dist) {
+                                max_dist = V.getDist();
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+        return max_dist;
     }
 
     public List<NodeData> shortestPath_TSP(int src, int dest, DirectedWeightedGraphImpl G) {

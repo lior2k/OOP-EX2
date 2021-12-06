@@ -9,23 +9,19 @@ public class MyNode implements NodeData {
     private double weight;
     private int tag;
     private String info;
-    private HashMap<MyPair, MyEdge> edges;
-    private int in_degree;
-    private int out_degree;
+    private HashMap<MyPair, EdgeData> edges;
     private int discovery_time;
     private int finish_time;
     private double dist;
     private MyNode prev;
 
-    public MyNode(int k, GeoLocation g, double w, int tag) {
+    public MyNode(int k, GeoLocation g) {
         this.key = k;
         this.location = (GeoLocationImpl) g;
-        this.weight = w;
-        this.tag = tag;
-        this.info = "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag+" in_deg: "+in_degree+" out_deg: "+out_degree;
+        this.weight = 0;
+        this.tag = 255;
+        this.info = "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag;
         this.edges = new HashMap<>();
-        this.in_degree = 0;
-        this.out_degree = 0;
         this.discovery_time = 0;
         this.finish_time = 0;
         this.dist = 0;
@@ -76,10 +72,6 @@ public class MyNode implements NodeData {
         this.tag = t;
     }
 
-    public int getDegree() {
-        return this.in_degree+this.out_degree;
-    }
-
     public int getDiscovery_time() {
         return  this.discovery_time;
     }
@@ -113,15 +105,10 @@ public class MyNode implements NodeData {
     }
 
     public void addEdge(MyEdge E) {
-        if (E.getSrc() == this.key) {
-            this.out_degree++;
-        } else {
-            this.in_degree++;
-        }
         this.edges.put(E.getPair(), E);
     }
 
-    public HashMap<MyPair, MyEdge> getEdges() {
+    public HashMap<MyPair, EdgeData> getEdges() {
         return this.edges;
     }
 
@@ -130,43 +117,35 @@ public class MyNode implements NodeData {
     }
 
     public MyEdge removeEdge(MyPair p) {
-        MyEdge E = this.edges.remove(p);
-        if (E.getSrc() == this.key) {
-            this.out_degree--;
-        } else {
-            this.in_degree--;
-        }
-        return E;
+        return (MyEdge) this.edges.remove(p);
     }
 
     public MyNode copy() {
-        MyNode temp_node = new MyNode(this.key, this.location.copy(), this.weight, this.tag);
-        temp_node.in_degree = this.in_degree;
-        temp_node.out_degree = this.out_degree;
+        MyNode temp_node = new MyNode(this.key, this.location.copy());
+        temp_node.tag = this.tag;
+        temp_node.weight = this.weight;
         temp_node.discovery_time = this.discovery_time;
         temp_node.finish_time = this.finish_time;
         temp_node.prev = this.prev;
         temp_node.dist = this.dist;
         temp_node.setInfo(this.info);
-        for (Map.Entry<MyPair, MyEdge> me : this.edges.entrySet()) {
-            MyEdge temp_edge = me.getValue().copy();
-            temp_node.addEdge(temp_edge);
+        for (EdgeData E : this.edges.values()) {
+            temp_node.addEdge(((MyEdge) E).copy());
         }
         return temp_node;
     }
 
     public MyNode reversed() {
-        MyNode temp_node = new MyNode(this.key, this.location.copy(), this.weight, this.tag);
-        temp_node.in_degree = this.in_degree;
-        temp_node.out_degree = this.out_degree;
+        MyNode temp_node = new MyNode(this.key, this.location.copy());
+        temp_node.tag = this.tag;
+        temp_node.weight = this.weight;
         temp_node.setInfo(this.info);
         temp_node.finish_time = this.finish_time;
         temp_node.discovery_time = this.discovery_time;
         temp_node.prev = this.prev;
         temp_node.dist = this.dist;
-        for (Map.Entry<MyPair, MyEdge> me : this.edges.entrySet()) {
-            MyEdge temp_edge = me.getValue().reversedEdge();
-            temp_node.addEdge(temp_edge);
+        for (EdgeData E : this.edges.values()) {
+            temp_node.addEdge(((MyEdge) E).reversedEdge());
         }
         return temp_node;
     }
@@ -174,9 +153,7 @@ public class MyNode implements NodeData {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof MyNode) {
-            if (((MyNode) obj).getKey() == this.key) {
-                return true;
-            }
+            return ((MyNode) obj).getKey() == this.key;
         }
         return false;
     }
