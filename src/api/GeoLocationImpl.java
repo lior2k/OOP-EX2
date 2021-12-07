@@ -1,11 +1,11 @@
 package api;
 
-public class GeoLocationImpl implements GeoLocation {
-    private double x;
-    private double y;
-    private double z;
+public class GeoLocationImpl implements GeoLocation{
+    private final double x;
+    private final double y;
+    private final double z;
 
-    public GeoLocationImpl(double x, double y, double z) {
+    public GeoLocationImpl(double x,double y,double z){
         this.x = x;
         this.y = y;
         this.z = z;
@@ -13,32 +13,32 @@ public class GeoLocationImpl implements GeoLocation {
 
     @Override
     public double x() {
-        return x;
+        return this.x;
     }
 
     @Override
     public double y() {
-        return y;
+        return this.y;
     }
 
     @Override
     public double z() {
-        return z;
+        return this.z;
+    }
+
+    public GeoLocationImpl copy(){
+        return new GeoLocationImpl(this.x,this.y,this.z);
     }
 
     @Override
     public double distance(GeoLocation g) {
-        double dx = (this.x - g.x())*(this.x - g.x());
-        double dy = (this.y - g.x())*(this.x - g.y());
-        double dz = (this.z - g.x())*(this.x - g.z());
+        double dx = g.x() - this.x;
+        double dy = g.y() - this.y;
+        double dz = g.z() - this.z;
         return Math.sqrt((dx*dx)+(dy*dy)+(dz*dz));
     }
 
     public String toString() {
         return x+","+y+","+z;
-    }
-
-    public GeoLocationImpl copy() {
-        return new GeoLocationImpl(this.x, this.y, this.z);
     }
 }

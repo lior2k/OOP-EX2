@@ -1,18 +1,22 @@
 package api;
 
-
 public class MyEdge implements EdgeData {
-    private MyPair pair;
-    private int tag;
-    private double weight;
-    private String info;
 
-    public MyEdge(int src, int dest, double weight) {
-        this.pair = new MyPair(src, dest);
+    private final double weight;
+    private String info;
+    private int tag;
+    private final MyPair pair;
+
+    public MyEdge(int src, int dest, double w){
+        this.pair = new MyPair(src,dest);
+        this.weight = w;
         this.tag = 255;
-        this.weight = weight;
-        this.info = "[Edge: from: "+pair.getLeft()+" to: "+pair.getRight()+" color: "+tag+" weight: "+weight+"]";
+        this.info = "from: "+src+" to: "+dest+" weight: "+w+" tag: "+tag;
     }
+    public MyPair getPair(){
+        return this.pair;
+    }
+
     @Override
     public int getSrc() {
         return this.pair.getLeft();
@@ -35,7 +39,7 @@ public class MyEdge implements EdgeData {
 
     @Override
     public void setInfo(String s) {
-
+        this.info = s;
     }
 
     @Override
@@ -48,23 +52,15 @@ public class MyEdge implements EdgeData {
         this.tag = t;
     }
 
-    public MyPair getPair() {
-        return this.pair;
+    public void reverseEdge(){
+        this.pair.reversePair();
     }
 
-    public String toString() {
-        return this.info;
+    public MyEdge copy(){
+        return new MyEdge(this.getSrc(),this.getDest(),this.weight);
     }
 
-    public MyEdge copy() {
-        MyEdge tempedge = new MyEdge(this.getSrc(), this.getDest(), this.weight);
-        tempedge.setInfo(this.info);
-        return tempedge;
-    }
-
-    public MyEdge reversedEdge() {
-        MyEdge tempedge = new MyEdge(this.getDest(), this.getSrc(), this.weight);
-        tempedge.setInfo("[Edge: from: "+pair.getRight()+" to: "+pair.getLeft()+" color: "+tag+" weight: "+weight+"]");
-        return tempedge;
+    public String toString(){
+        return "src: " +this.getSrc()+ " dest: " +this.getDest()+ " weight: " +this.weight;
     }
 }

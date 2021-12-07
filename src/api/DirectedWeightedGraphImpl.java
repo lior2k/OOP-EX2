@@ -1,18 +1,18 @@
 package api;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
-import java.util.*;
+public class DirectedWeightedGraphImpl implements DirectedWeightedGraph{
 
-public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> graph;
     private HashMap<MyPair, EdgeData> all_edges;
-    private int node_size;
     private int MC;
 
-    public DirectedWeightedGraphImpl() {
-        graph = new HashMap<>();
-        all_edges = new HashMap<>();
-        node_size = 0;
-        MC = 0;
+    public DirectedWeightedGraphImpl(){
+        this.graph = new HashMap<>();
+        this.all_edges = new HashMap<>();
+        this.MC =0;
     }
 
     @Override
@@ -22,17 +22,12 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        if (graph.get(src) == null) {
-            return null;
-        }
-        MyNode temp = (MyNode) graph.get(src);
-        return temp.getEdges().get(new MyPair(src,dest));
+        return all_edges.get(new MyPair(src,dest));
     }
 
     @Override
     public void addNode(NodeData n) {
         graph.put(n.getKey(), n);
-        node_size++;
         MC++;
     }
 
@@ -62,8 +57,8 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        MyNode n = (MyNode) graph.get(node_id);
-        return n.getEdges().values().iterator();
+        MyNode temp = (MyNode) graph.get(node_id);
+        return temp.getEdges().values().iterator();
     }
 
     @Override
@@ -71,24 +66,21 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         if (graph.get(key) == null) {
             return null;
         }
-
-        MyNode V = (MyNode) graph.get(key);
-        for (EdgeData E : V.getEdges().values()) {
-            MyPair p = new MyPair(E.getSrc(), E.getDest());
+        MyNode temp = (MyNode) graph.get(key);
+        for (EdgeData E : temp.getEdges().values()) {
             if (E.getSrc() == key) {
                 MyNode src_node = (MyNode) graph.get(E.getDest());
-                src_node.removeEdge(p);
+                src_node.removeEdge(((MyEdge) E).getPair());
             }
             if (E.getDest() == key) {
                 MyNode dest_node = (MyNode) graph.get(E.getSrc());
-                dest_node.removeEdge(p);
+                dest_node.removeEdge(((MyEdge) E).getPair());
             }
             all_edges.remove(((MyEdge) E).getPair());
         }
         graph.remove(key);
-        node_size--;
         MC++;
-        return V;
+        return temp;
     }
 
     @Override
@@ -96,18 +88,20 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         if (graph.get(src) == null || graph.get(dest) == null) {
             return null;
         }
-        all_edges.remove(new MyPair(src,dest));
+        MyPair p = new MyPair(src,dest);
+        all_edges.remove(p);
         MyNode src_node = (MyNode) graph.get(src);
         MyNode dest_node = (MyNode) graph.get(dest);
-        MyEdge E = src_node.removeEdge(new MyPair(src,dest));
-        dest_node.removeEdge(new MyPair(src,dest));
+        MyEdge E = src_node.removeEdge(p);
+        dest_node.removeEdge(p);
         MC++;
         return E;
     }
 
     @Override
     public int nodeSize() {
-        return this.node_size;
+        return this.graph.size();
+
     }
 
     @Override
@@ -120,8 +114,8 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         return this.MC;
     }
 
-    public String toString() {
-        return "node_size: "+node_size+", edge_size: "+all_edges.size()+", "+graph.toString();
+    public String toString(){
+        return "Node size: "+graph.size()+" edge size: "+edgeSize()+this.graph;
     }
 
     public void printGraph() {

@@ -1,30 +1,67 @@
 package api;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyNode implements NodeData {
+public class MyNode implements NodeData{
+
     private final int key;
     private GeoLocationImpl location;
     private double weight;
-    private int tag;
     private String info;
-    private HashMap<MyPair, EdgeData> edges;
+    private int tag;
+    private HashMap<MyPair,EdgeData> edges;
     private int discovery_time;
     private int finish_time;
-    private double dist;
+    private double distance;
     private MyNode prev;
 
-    public MyNode(int k, GeoLocation g) {
-        this.key = k;
-        this.location = (GeoLocationImpl) g;
-        this.weight = 0;
+    public MyNode(int id, GeoLocation loc) {
+        this.key = id;
         this.tag = 255;
-        this.info = "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag;
+        this.location = (GeoLocationImpl) loc;
+        this.weight = 0;
         this.edges = new HashMap<>();
         this.discovery_time = 0;
         this.finish_time = 0;
-        this.dist = 0;
+        this.distance = 0;
+        this.prev = null;
+        this.info = "key: "+this.key+" location: "+this.location;
+    }
+
+    public int getDiscovery_time(){
+        return this.discovery_time;
+    }
+
+    public int getFinish_time(){
+        return this.finish_time;
+    }
+
+    public void setDiscovery_time(int s){
+        this.discovery_time = s;
+    }
+
+    public void setFinish_time(int f){
+        this.finish_time = f;
+    }
+
+    public double getDistance(){
+        return this.distance;
+    }
+
+    public MyNode getPrev(){
+        return this.prev;
+    }
+
+    public void setDistance(double d){
+        this.distance = d;
+    }
+
+    public void setPrev(MyNode n){
+        this.prev = n;
+    }
+
+    public HashMap<MyPair, EdgeData> getEdges() {
+        return this.edges;
     }
 
     @Override
@@ -59,7 +96,7 @@ public class MyNode implements NodeData {
 
     @Override
     public void setInfo(String s) {
-
+        this.info = s;
     }
 
     @Override
@@ -72,91 +109,32 @@ public class MyNode implements NodeData {
         this.tag = t;
     }
 
-    public int getDiscovery_time() {
-        return  this.discovery_time;
+    public MyNode copy(){
+        MyNode n = new MyNode(this.key, this.location.copy());
+        n.tag = this.tag;
+        n.weight = this.weight;
+        n.info = this.info;
+        n.discovery_time = this.discovery_time;
+        n.finish_time = this.finish_time;
+        n.prev = this.prev;
+        n.distance = this.distance;
+        for (EdgeData E : this.edges.values()){
+            MyEdge edge = ((MyEdge) E).copy();
+            n.edges.put(edge.getPair(), edge);
+        }
+        return n;
     }
 
-    public int getFinish_time() {
-        return this.finish_time;
-    }
-
-    public void setDiscovery_time(int time) {
-        this.discovery_time = time;
-    }
-
-    public void setFinish_time(int time) {
-        this.finish_time = time;
-    }
-
-    public double getDist() {
-        return this.dist;
-    }
-
-    public void setDist(double dist) {
-        this.dist = dist;
-    }
-
-    public MyNode getPrev() {
-        return this.prev;
-    }
-
-    public void setPrev(MyNode prev) {
-        this.prev = prev;
-    }
-
-    public void addEdge(MyEdge E) {
-        this.edges.put(E.getPair(), E);
-    }
-
-    public HashMap<MyPair, EdgeData> getEdges() {
-        return this.edges;
-    }
-
-    public String toString() {
-        return "Node: "+key+" Located at: "+location+" Weight: "+weight+" Color: "+tag+" D_Time: "+discovery_time+" F_Time: "+finish_time+" dist:"+this.dist;
+    public void addEdge(MyEdge e){
+        edges.put(e.getPair(), e);
     }
 
     public MyEdge removeEdge(MyPair p) {
         return (MyEdge) this.edges.remove(p);
     }
 
-    public MyNode copy() {
-        MyNode temp_node = new MyNode(this.key, this.location.copy());
-        temp_node.tag = this.tag;
-        temp_node.weight = this.weight;
-        temp_node.discovery_time = this.discovery_time;
-        temp_node.finish_time = this.finish_time;
-        temp_node.prev = this.prev;
-        temp_node.dist = this.dist;
-        temp_node.setInfo(this.info);
-        for (EdgeData E : this.edges.values()) {
-            temp_node.addEdge(((MyEdge) E).copy());
-        }
-        return temp_node;
+    public String toString() {
+        return "key: " + this.key + " weight: " + this.weight + " tag: " + this.tag + " discovery time: " + this.discovery_time
+                + " finish time: " + this.finish_time;
     }
-
-    public MyNode reversed() {
-        MyNode temp_node = new MyNode(this.key, this.location.copy());
-        temp_node.tag = this.tag;
-        temp_node.weight = this.weight;
-        temp_node.setInfo(this.info);
-        temp_node.finish_time = this.finish_time;
-        temp_node.discovery_time = this.discovery_time;
-        temp_node.prev = this.prev;
-        temp_node.dist = this.dist;
-        for (EdgeData E : this.edges.values()) {
-            temp_node.addEdge(((MyEdge) E).reversedEdge());
-        }
-        return temp_node;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof MyNode) {
-            return ((MyNode) obj).getKey() == this.key;
-        }
-        return false;
-    }
-
-
 }

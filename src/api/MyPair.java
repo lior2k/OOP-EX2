@@ -6,33 +6,36 @@ public class MyPair {
     private int left;
     private int right;
 
-    public MyPair(int src, int dest) {
-        left = src;
-        right = dest;
+    public MyPair(int x,int y){
+        this.left = x;
+        this.right = y;
     }
 
-    public int getLeft() {
-        return left;
+    public int getLeft(){
+        return this.left;
     }
 
-    public int getRight() {
-        return right;
+    public int getRight(){
+        return this.right;
     }
 
-    public String toString() {
-        return "("+this.left+","+this.right+")";
+    public void reversePair(){
+        int temp = this.right;
+        this.right = this.left;
+        this.left = temp;
     }
 
     @Override
-    public boolean equals(Object p){
-        if (p instanceof MyPair) {
-            return this.right == ((MyPair) p).getRight() && this.left == ((MyPair) p).getLeft();
+    public boolean equals(Object o){
+        if (o instanceof MyPair){
+            return ((MyPair) o).left == this.left && ((MyPair) o).right == this.right;
         }
         return false;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(this.right) + Objects.hashCode(this.left);
+    public int hashCode(){
+        return Objects.hashCode(this.left) + Objects.hashCode(this.right);
     }
+
 }
