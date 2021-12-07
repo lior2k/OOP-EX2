@@ -10,12 +10,14 @@ public class tests {
         DirectedWeightedGraphAlgoImpl Algo = new DirectedWeightedGraphAlgoImpl();
         Algo.load("data/G1.json");
         System.out.println(Algo.center());
+        System.out.println(Algo.getGraph());
         Algo.load("data/G2.json");
         System.out.println(Algo.center());
+//        System.out.println(Algo.getGraph());
         Algo.load("data/G3.json");
         System.out.println(Algo.center());
-        Algo.load("data/1000Nodes.json");
-        System.out.println(Algo.center());
+//        System.out.println(Algo.getGraph());
+
 //        DirectedWeightedGraph g = new DirectedWeightedGraphImpl();
 //        GeoLocation l = new GeoLocationImpl(0,0,0);
 //        MyNode n0 = new MyNode(0,l,0);

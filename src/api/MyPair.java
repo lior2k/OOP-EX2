@@ -3,12 +3,12 @@ package api;
 import java.util.Objects;
 
 public class MyPair {
-    private int left;
-    private int right;
+    private final int left;
+    private final int right;
 
-    public MyPair(int x,int y){
-        this.left = x;
-        this.right = y;
+    public MyPair(int left, int right) {
+        this.left = left;
+        this.right = right;
     }
 
     public int getLeft(){
@@ -17,12 +17,6 @@ public class MyPair {
 
     public int getRight(){
         return this.right;
-    }
-
-    public void reversePair(){
-        int temp = this.right;
-        this.right = this.left;
-        this.left = temp;
     }
 
     @Override
@@ -36,6 +30,10 @@ public class MyPair {
     @Override
     public int hashCode(){
         return Objects.hashCode(this.left) + Objects.hashCode(this.right);
+    }
+
+    public String toString() {
+        return "("+this.left+","+this.right+")";
     }
 
 }

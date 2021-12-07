@@ -11,7 +11,6 @@ import java.util.*;
 public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgorithms{
 
     private DirectedWeightedGraph graph;
-    int Time = 0;
     int Grey = 153;
     int Black = 0;
     int White = 255;
@@ -81,7 +80,7 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         List<NodeData> ans = new LinkedList<>();
         int size = list.size()-1;
         while (size >= 0){
-            ans.add(list.get(size));;
+            ans.add(list.get(size));
             size--;
         }
         return ans;
@@ -89,9 +88,9 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
 
     @Override
     public NodeData center() {
-//        if (!isConnected()) {
-//            return null;
-//        }
+        if (!isConnected()) {
+            return null;
+        }
         double shortest_dist = Integer.MAX_VALUE;
         NodeData ans = null;
         Iterator<NodeData> iter = graph.nodeIter();
@@ -253,128 +252,6 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         return true;
     }
 
-//    private DirectedWeightedGraphImpl reverse(){
-//        DirectedWeightedGraphImpl reversed_graph = (DirectedWeightedGraphImpl) copy();
-//        Iterator<EdgeData> iter = reversed_graph.edgeIter();
-//        while (iter.hasNext()){
-//            MyEdge e = (MyEdge) iter.next();
-//            e.reverseEdge();
-//        }
-//        return reversed_graph;
-//    }
-
-//    private void DFS(){
-//        Iterator<NodeData> iter = this.graph.nodeIter();
-//        while(iter.hasNext()){
-//            MyNode n = (MyNode) iter.next();
-//            n.setTag(White);
-//        }
-//        Time = 0;
-//        iter = this.graph.nodeIter();
-//        while(iter.hasNext()){
-//            MyNode u = (MyNode) iter.next();
-//            if(u.getTag() == White){
-//                DFS_visit(u);
-//            }
-//        }
-//    }
-//
-//    private void DFS_visit(MyNode u){
-//        u.setTag(Grey);
-//        Time++;
-//        u.setDiscovery_time(Time);
-//        Iterator<EdgeData> iter = this.graph.edgeIter(u.getKey());
-//        while(iter.hasNext()){
-//            MyEdge e = (MyEdge) iter.next();
-//            if(e.getSrc() == u.getKey()){
-//                MyNode v = (MyNode) this.graph.getNode(e.getDest());
-//                if(v.getTag() == White){
-//                    DFS_visit(v);
-//                }
-//            }
-//        }
-//        u.setTag(Black);
-//        u.setFinish_time(++Time);
-//    }
-//
-//    private int DFS2(DirectedWeightedGraph g){
-//        Iterator<NodeData> iter = g.nodeIter();
-//        while(iter.hasNext()){
-//            MyNode n = (MyNode) iter.next();
-//            n.setTag(White);
-//        }
-//        int counter = 0;
-//        iter = g.nodeIter();
-//        MyNode[] arr = new MyNode[g.nodeSize()];
-//        while(iter.hasNext()){
-//            MyNode n = (MyNode) iter.next();
-//            arr[counter++] = n;
-//        }
-//        counter = 0;
-//        mergeSort(arr,arr.length);
-//        for (int i=0; i< arr.length; i++){
-//            if(arr[i].getTag() == White){
-//                counter++;
-//                DFS2_visit(g,arr[i]);
-//            }
-//        }
-//        return counter;
-//    }
-//
-//    private void DFS2_visit(DirectedWeightedGraph g,MyNode u){
-//        u.setTag(Grey);
-//        Iterator<EdgeData> iter = g.edgeIter(u.getKey());
-//        while(iter.hasNext()){
-//            MyEdge e = (MyEdge) iter.next();
-//            if(e.getSrc() == u.getKey()){
-//                MyNode v = (MyNode) g.getNode(e.getDest());
-//                if(v.getTag() == White){
-//                    DFS2_visit(g,v);
-//                }
-//            }
-//        }
-//        u.setTag(Black);
-//    }
-
-//    private void mergeSort(MyNode[] a, int n) {
-//        if (n < 2) {
-//            return;
-//        }
-//        int mid = n / 2;
-//        MyNode[] l = new MyNode[mid];
-//        MyNode[] r = new MyNode[n - mid];
-//
-//        for (int i = 0; i < mid; i++) {
-//            l[i] = a[i];
-//        }
-//        for (int i = mid; i < n; i++) {
-//            r[i - mid] = a[i];
-//        }
-//        mergeSort(l, mid);
-//        mergeSort(r, n - mid);
-//
-//        merge(a, l, r, mid, n - mid);
-//    }
-//
-//    private void merge(MyNode[] a, MyNode[] l, MyNode[] r, int left, int right) {
-//
-//        int i = 0, j = 0, k = 0;
-//        while (i < left && j < right) {
-//            if (l[i].getFinish_time() >= r[j].getFinish_time()) {
-//                a[k++] = l[i++];
-//            }
-//            else {
-//                a[k++] = r[j++];
-//            }
-//        }
-//        while (i < left) {
-//            a[k++] = l[i++];
-//        }
-//        while (j < right) {
-//            a[k++] = r[j++];
-//        }
-//    }
-
     private void Dijkstra(MyNode src_node) {
         List<NodeData> queue = new LinkedList<>();
         Iterator<NodeData> iter = graph.nodeIter();
@@ -385,7 +262,6 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
             queue.add(n);
         }
         src_node.setDistance(0);
-
         while (queue.size() != 0) {
             int key = getMinDistNodeKey(queue);
             if(key == -1) {
@@ -445,7 +321,7 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
 //        return ans;
 //    }
 
-    public void Dijkstra_TSP(MyNode S, DirectedWeightedGraphImpl G) {
+    private void Dijkstra_TSP(MyNode S, DirectedWeightedGraphImpl G) {
         List<NodeData> Que = new LinkedList<>();
         Iterator<NodeData> iter = G.nodeIter();
         while (iter.hasNext()) {
@@ -477,7 +353,7 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         }
     }
 
-    public List<NodeData> shortestPath_TSP(int src, int dest, DirectedWeightedGraphImpl G) {
+    private List<NodeData> shortestPath_TSP(int src, int dest, DirectedWeightedGraphImpl G) {
         List<NodeData> list = new LinkedList<>();
         Dijkstra_TSP((MyNode) G.getNode(src), G);
         MyNode temp = (MyNode) G.getNode(dest);
@@ -503,7 +379,7 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         return ans;
     }
 
-    public int getMinDistNodeKey(List<NodeData> L) {
+    private int getMinDistNodeKey(List<NodeData> L) {
         int ans = -1;
         double dist = Integer.MAX_VALUE;
         for (NodeData nodeData : L) {
@@ -515,7 +391,7 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         return ans;
     }
 
-    public void BFS(MyNode s) {
+    private void BFS(MyNode s) {
         Iterator<NodeData> node_iter = graph.nodeIter();
         while (node_iter.hasNext()) {
             MyNode n = (MyNode) node_iter.next();

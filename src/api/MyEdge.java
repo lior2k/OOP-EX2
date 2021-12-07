@@ -52,10 +52,6 @@ public class MyEdge implements EdgeData {
         this.tag = t;
     }
 
-    public void reverseEdge(){
-        this.pair.reversePair();
-    }
-
     public MyEdge copy(){
         return new MyEdge(this.getSrc(),this.getDest(),this.weight);
     }

@@ -1,5 +1,4 @@
 package api;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -118,12 +117,4 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph{
         return "Node size: "+graph.size()+" edge size: "+edgeSize()+this.graph;
     }
 
-    public void printGraph() {
-        System.out.println("Graph - start");
-        for (NodeData n : graph.values()) {
-            System.out.println(n);
-            System.out.println(((MyNode) n).getEdges());
-        }
-        System.out.println("Graph - end");
-    }
 }

@@ -20,11 +20,4 @@ class MyEdgeTest {
         MyEdge copy = E.copy();
         assertNotEquals(copy, E);
     }
-
-    @Test
-    void reversedEdge() {
-        MyEdge reversed = E.copy();
-        reversed.reverseEdge();
-        assertEquals(new MyPair(2,0), reversed.getPair());
-    }
 }
