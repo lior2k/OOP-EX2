@@ -27,6 +27,8 @@ class DirectedWeightedGraphAlgoImplTest {
     void isConnected() {
         Algo.load(st);
         assertTrue(Algo.isConnected());
+        Algo.load(st2);
+        assertTrue(Algo.isConnected());
     }
 
     @org.junit.jupiter.api.Test

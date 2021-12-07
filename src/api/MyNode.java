@@ -134,7 +134,6 @@ public class MyNode implements NodeData{
     }
 
     public String toString() {
-        return "key: " + this.key + " weight: " + this.weight + " tag: " + this.tag + " discovery time: " + this.discovery_time
-                + " finish time: " + this.finish_time;
+        return "key: "+this.key+" location: "+this.location+"dist: "+this.distance;
     }
 }

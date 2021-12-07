@@ -1,4 +1,4 @@
-package Ex2.tests;
+package tests;
 
 import api.*;
 import org.junit.jupiter.api.Test;
