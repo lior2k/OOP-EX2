@@ -126,56 +126,36 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
 //            }
 //        }
 //        return ans;
-//    }
+
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        DirectedWeightedGraphImpl G = (DirectedWeightedGraphImpl) copy();
-        List<NodeData> ans = new LinkedList<>();
-        int i = 0;
-        while (i < cities.size()-1) {
-            while (i < cities.size()-1) {
-                if (!ans.contains(cities.get(i))) {
-                    break;
-                } else {
-                    i++;
-                }
-            }
-            if (i >= cities.size()) {
-                break;
-            }
-            int j = i + 1;
-            while (j < cities.size()) {
-                if (!ans.contains(cities.get(j))) {
-                    break;
-                } else {
-                    j++;
-                }
-            }
-            if (j >= cities.size()) {
-                break;
-            }
-            MyNode n = (MyNode) cities.get(i);
-            MyNode v = (MyNode) cities.get(j);
-            List<NodeData> path = shortestPath_TSP(n.getKey(), v.getKey(), G);
-            if (path == null) {
-                return null;
-            }
-            for (NodeData temp : path) {
-                if (!temp.equals(v)) {
-                    ans.add(temp);
-                }
-            }
-            i++;
-
+        Iterator<NodeData> node_iter = graph.nodeIter();
+        while (node_iter.hasNext()) {
+            node_iter.next().setTag(White);
         }
-        i = 0;
-        //last while loop just to find the last node in cities that we didn't add to ans
-        while (i < cities.size()) {
-            if (!ans.contains(cities.get(i))) {
-                ans.add(cities.get(i));
+        List<NodeData> ans = new LinkedList<>();
+        List<NodeData> citiescopy = new LinkedList<>(cities);
+        while (!citiescopy.isEmpty()) {
+            if (citiescopy.size() == 1) {
+                ans.add(citiescopy.get(0));
+                break;
             }
-            i++;
+            citiescopy.removeIf(intersection -> intersection.getTag() == Black);
+            MyNode n1 = (MyNode) citiescopy.remove(0);
+            if (citiescopy.size() == 0) {
+                break;
+            }
+            MyNode n2 = (MyNode) citiescopy.get(0);
+            List<NodeData> path = shortestPath(n1.getKey(), n2.getKey());
+            for (NodeData intersection : path) {
+                if (ans.contains(intersection) && intersection != n2) {
+                    intersection.setTag(Black);
+                }
+                if (intersection != n2) {
+                    ans.add(intersection);
+                }
+            }
         }
         return ans;
     }

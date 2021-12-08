@@ -134,6 +134,6 @@ public class MyNode implements NodeData{
     }
 
     public String toString() {
-        return "key: "+this.key+" location: "+this.location+"dist: "+this.distance;
+        return "key: "+this.key;
     }
 }

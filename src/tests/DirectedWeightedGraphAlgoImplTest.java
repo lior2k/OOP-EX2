@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DirectedWeightedGraphAlgoImplTest {
     DirectedWeightedGraphAlgoImpl Algo = new DirectedWeightedGraphAlgoImpl();
-    String nodes1000 = "Ex2/src/data/1000Nodes.json"; //center = node num 362
-    String nodes10000 = "Ex2/src/data/10000Nodes.json"; //center = node num 3846
-    String G3 = "Ex2/src/data/G3.json";
-    String G2 = "Ex2/src/data/G2.json";
-    String G1 = "Ex2/src/data/G1.json";
+    String nodes1000 = "src/data/1000Nodes.json"; //center = node num 362
+    String nodes10000 = "src/data/10000Nodes.json"; //center = node num 3846
+    String G3 = "src/data/G3.json";
+    String G2 = "src/data/G2.json";
+    String G1 = "src/data/G1.json";
 
     @org.junit.jupiter.api.Test
     void init() {
@@ -141,14 +141,14 @@ class DirectedWeightedGraphAlgoImplTest {
         cities.add(Algo.getGraph().getNode(21));
         cities.add(Algo.getGraph().getNode(44));
         System.out.println(Algo.tsp(cities));
-//        Algo.load(nodes1000);
-//        cities = new LinkedList<>();
-//        cities.add(Algo.getGraph().getNode(0));
-//        cities.add(Algo.getGraph().getNode(250));
-//        cities.add(Algo.getGraph().getNode(500));
-//        cities.add(Algo.getGraph().getNode(750));
-//        cities.add(Algo.getGraph().getNode(999));
-//        System.out.println(Algo.tsp(cities));
+        Algo.load(nodes1000);
+        cities = new LinkedList<>();
+        cities.add(Algo.getGraph().getNode(0));
+        cities.add(Algo.getGraph().getNode(250));
+        cities.add(Algo.getGraph().getNode(500));
+        cities.add(Algo.getGraph().getNode(750));
+        cities.add(Algo.getGraph().getNode(999));
+        System.out.println(Algo.tsp(cities));
     }
 
     @org.junit.jupiter.api.Test
