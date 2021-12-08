@@ -91,25 +91,25 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         if (!isConnected()) {
             return null;
         }
-        double shortest_dist = Integer.MAX_VALUE;
+        double shortest_dist = Double.MAX_VALUE;
         NodeData ans = null;
         Iterator<NodeData> iter = graph.nodeIter();
         while (iter.hasNext()) {
             MyNode n = (MyNode) iter.next();
             Dijkstra(n);
-            Iterator<NodeData> iter2 = graph.nodeIter();
-            double max_dist = -1;
-            while (iter2.hasNext()) {
-                MyNode v = (MyNode) iter2.next();
-                if (v.getDistance() > max_dist) {
-                    max_dist = v.getDistance();
+                Iterator<NodeData> iter2 = graph.nodeIter();
+                double max_dist = -1;
+                while (iter2.hasNext()) {
+                    MyNode v = (MyNode) iter2.next();
+                    if (v.getDistance() > max_dist) {
+                        max_dist = v.getDistance();
+                    }
+                }
+                if (max_dist < shortest_dist) {
+                    shortest_dist = max_dist;
+                    ans = n;
                 }
             }
-            if (max_dist < shortest_dist) {
-                shortest_dist = max_dist;
-                ans = n;
-            }
-        }
         return ans;
     }
 
@@ -167,6 +167,7 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
                 }
             }
             i++;
+
         }
         i = 0;
         //last while loop just to find the last node in cities that we didn't add to ans
@@ -284,6 +285,42 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         }
     }
 
+//    private boolean Dijkstra_center(MyNode src_node, double shortest_dist) {
+//        List<NodeData> queue = new LinkedList<>();
+//        Iterator<NodeData> iter = graph.nodeIter();
+//        while(iter.hasNext()){
+//            MyNode n = (MyNode) iter.next();
+//            n.setPrev(null);
+//            n.setDistance(Double.MAX_VALUE);
+//            queue.add(n);
+//        }
+//        src_node.setDistance(0);
+//        while (queue.size() != 0) {
+//            int key = getMinDistNodeKey(queue);
+//            if(key == -1) {
+//                break;
+//            }
+//            MyNode u = (MyNode) graph.getNode(key);
+//            queue.remove(u);
+//            Iterator<EdgeData> EdgeIter = graph.edgeIter(u.getKey());
+//            while (EdgeIter.hasNext()) {
+//                MyEdge e = (MyEdge) EdgeIter.next();
+//                if (e.getSrc() == u.getKey()) {
+//                    MyNode v = (MyNode) graph.getNode(e.getDest());
+//                    double dis_from_src = u.getDistance() + e.getWeight();
+//                    if(dis_from_src < v.getDistance()){
+//                        v.setDistance(dis_from_src);
+//                        v.setPrev(u);
+//                        if (v.getDistance() > shortest_dist) {
+//                            return false;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return true;
+//    }
+
 //    private double Dijkstra_center(MyNode src_node) {
 //        double ans = -1;
 //        List<NodeData> queue = new LinkedList<>();
@@ -336,8 +373,8 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
             if (node_index == -1) {
                 break;
             }
-            MyNode u = (MyNode) Que.get(node_index);
-            Que.remove(node_index);
+            MyNode u = (MyNode) graph.getNode(node_index);
+            Que.remove(u);
             Iterator<EdgeData> EdgeIter = G.edgeIter(u.getKey());
             while (EdgeIter.hasNext()) {
                 MyEdge e = (MyEdge) EdgeIter.next();

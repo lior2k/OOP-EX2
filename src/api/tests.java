@@ -8,15 +8,15 @@ public class tests {
     public static void main(String[] args) {
 
         DirectedWeightedGraphAlgoImpl Algo = new DirectedWeightedGraphAlgoImpl();
-        Algo.load("data/G1.json");
+        Algo.load("Ex2/src/data/G1.json");
         System.out.println(Algo.center());
         System.out.println(Algo.getGraph());
-        Algo.load("data/G2.json");
+        Algo.load("Ex2/src/data/G2.json");
         System.out.println(Algo.center());
-//        System.out.println(Algo.getGraph());
-        Algo.load("data/G3.json");
+        Algo.load("Ex2/src/data/G3.json");
         System.out.println(Algo.center());
-//        System.out.println(Algo.getGraph());
+        System.out.println(Algo.isConnected());
+        System.out.println(Algo.getGraph());
 
 //        DirectedWeightedGraph g = new DirectedWeightedGraphImpl();
 //        GeoLocation l = new GeoLocationImpl(0,0,0);

@@ -1,4 +1,5 @@
 import api.DirectedWeightedGraph;
+import api.DirectedWeightedGraphAlgoImpl;
 import api.DirectedWeightedGraphAlgorithms;
 
 /**
@@ -10,11 +11,15 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
+    static String G3 = "Ex2/src/data/G3.json";
+    static String G2 = "Ex2/src/data/G2.json";
+    static String G1 = "Ex2/src/data/G1.json";
+    static String nodes1000 = "Ex2/src/data/1000Nodes.json";
+
     public static DirectedWeightedGraph getGrapg(String json_file) {
-        DirectedWeightedGraph ans = null;
-        // ****** Add your code here ******
-        //
-        // ********************************
+        DirectedWeightedGraphAlgorithms algo = new DirectedWeightedGraphAlgoImpl();
+        algo.load(json_file);
+        DirectedWeightedGraph ans = algo.getGraph();
         return ans;
     }
     /**
@@ -23,10 +28,8 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
-        DirectedWeightedGraphAlgorithms ans = null;
-        // ****** Add your code here ******
-        //
-        // ********************************
+        DirectedWeightedGraphAlgorithms ans = new DirectedWeightedGraphAlgoImpl();
+        ans.load(json_file);
         return ans;
     }
     /**
@@ -36,8 +39,11 @@ public class Ex2 {
      */
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
-        // ****** Add your code here ******
-        //
-        // ********************************
+        GUI Gui = new GUI((DirectedWeightedGraphAlgoImpl) alg);
+        Gui.draw();
+    }
+
+    public static void main(String[] args) {
+        runGUI(G3);
     }
 }

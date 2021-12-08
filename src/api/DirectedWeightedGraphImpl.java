@@ -46,18 +46,17 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph{
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return graph.values().iterator();
+        return new mynodeIterator(this, this.MC);
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return all_edges.values().iterator();
+        return new myedgeIterator(this, this.MC);
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        MyNode temp = (MyNode) graph.get(node_id);
-        return temp.getEdges().values().iterator();
+        return new myedgeIterator(this, this.MC, node_id);
     }
 
     @Override
@@ -111,6 +110,14 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph{
     @Override
     public int getMC() {
         return this.MC;
+    }
+
+    public HashMap<Integer, NodeData> get_map() {
+        return this.graph;
+    }
+
+    public HashMap<MyPair, EdgeData> getAll_edges() {
+        return this.all_edges;
     }
 
     public String toString(){

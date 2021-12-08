@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DirectedWeightedGraphAlgoImplTest {
     DirectedWeightedGraphAlgoImpl Algo = new DirectedWeightedGraphAlgoImpl();
-    String st = "data/1000Nodes.json"; //center = node num 362
-    String st2 = "data/10000Nodes.json"; //center = node num 3846
-    String G3 = "data/G3.json";
-    String G2 = "data/G2.json";
-    String G1 = "data/G1.json";
+    String nodes1000 = "Ex2/src/data/1000Nodes.json"; //center = node num 362
+    String nodes10000 = "Ex2/src/data/10000Nodes.json"; //center = node num 3846
+    String G3 = "Ex2/src/data/G3.json";
+    String G2 = "Ex2/src/data/G2.json";
+    String G1 = "Ex2/src/data/G1.json";
 
     @org.junit.jupiter.api.Test
     void init() {
@@ -55,9 +55,9 @@ class DirectedWeightedGraphAlgoImplTest {
         assertTrue(Algo.isConnected());
         Algo.load(G3);
         assertTrue(Algo.isConnected());
-        Algo.load(st);
+        Algo.load(nodes1000);
         assertTrue(Algo.isConnected());
-        Algo.load(st2);
+        Algo.load(nodes10000);
         assertTrue(Algo.isConnected());
     }
 
@@ -67,10 +67,10 @@ class DirectedWeightedGraphAlgoImplTest {
         Algo.load(G1);
         ans = Algo.shortestPathDist(6,10);
         assertEquals(5.4283296635770935, ans);
-        Algo.load(st);
+        Algo.load(nodes1000);
         ans = Algo.shortestPathDist(362,384);
         assertEquals(605.0049493760619, ans);
-        Algo.load(st2);
+        Algo.load(nodes10000);
         ans = Algo.shortestPathDist(362,3840);
         assertEquals(ans, 1093.542322166061);
     }
@@ -91,7 +91,7 @@ class DirectedWeightedGraphAlgoImplTest {
         for (int i=0; i<ans.size(); i++) {
             assertEquals(ans.get(i), eq.get(i));
         }
-        Algo.load(st2);
+        Algo.load(nodes10000);
         ans = Algo.shortestPath(362, 3840);
         eq = new LinkedList<>();
         eq.add(Algo.getGraph().getNode(362));
@@ -120,7 +120,7 @@ class DirectedWeightedGraphAlgoImplTest {
         n = Algo.getGraph().getNode(40);
         v = Algo.center();
         assertEquals(n, v);
-        Algo.load(st);
+        Algo.load(nodes1000);
         n = Algo.getGraph().getNode(362);
         v = Algo.center();
         assertEquals(n, v);
@@ -132,7 +132,23 @@ class DirectedWeightedGraphAlgoImplTest {
 
     @org.junit.jupiter.api.Test
     void tsp() {
-
+        List<NodeData> cities;
+        Algo.load(G3);
+        cities = new LinkedList<>();
+        cities.add(Algo.getGraph().getNode(0));
+        cities.add(Algo.getGraph().getNode(3));
+        cities.add(Algo.getGraph().getNode(7));
+        cities.add(Algo.getGraph().getNode(21));
+        cities.add(Algo.getGraph().getNode(44));
+        System.out.println(Algo.tsp(cities));
+//        Algo.load(nodes1000);
+//        cities = new LinkedList<>();
+//        cities.add(Algo.getGraph().getNode(0));
+//        cities.add(Algo.getGraph().getNode(250));
+//        cities.add(Algo.getGraph().getNode(500));
+//        cities.add(Algo.getGraph().getNode(750));
+//        cities.add(Algo.getGraph().getNode(999));
+//        System.out.println(Algo.tsp(cities));
     }
 
     @org.junit.jupiter.api.Test
