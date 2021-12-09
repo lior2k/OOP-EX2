@@ -124,4 +124,52 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph{
         return "Node size: "+graph.size()+" edge size: "+edgeSize()+this.graph;
     }
 
+    public double max_x() {
+        double max = -1;
+        Iterator<NodeData> node_iter = nodeIter();
+        while (node_iter.hasNext()) {
+            MyNode n = (MyNode) node_iter.next();
+            if (n.getLocation().x() > max) {
+                max = n.getLocation().x();
+            }
+        }
+        return max;
+    }
+
+    public double max_y() {
+        double max = -1;
+        Iterator<NodeData> node_iter = nodeIter();
+        while (node_iter.hasNext()) {
+            MyNode n = (MyNode) node_iter.next();
+            if (n.getLocation().y() > max) {
+                max = n.getLocation().y();
+            }
+        }
+        return max;
+    }
+
+    public double min_x() {
+        double min = Double.MAX_VALUE;
+        Iterator<NodeData> node_iter = nodeIter();
+        while (node_iter.hasNext()) {
+            MyNode n = (MyNode) node_iter.next();
+            if (n.getLocation().x() < min) {
+                min = n.getLocation().x();
+            }
+        }
+        return min;
+    }
+
+    public double min_y() {
+        double min = Double.MAX_VALUE;
+        Iterator<NodeData> node_iter = nodeIter();
+        while (node_iter.hasNext()) {
+            MyNode n = (MyNode) node_iter.next();
+            if (n.getLocation().y() < min) {
+                min = n.getLocation().y();
+            }
+        }
+        return min;
+    }
+
 }

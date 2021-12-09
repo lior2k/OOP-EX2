@@ -140,32 +140,15 @@ class DirectedWeightedGraphAlgoImplTest {
         cities.add(Algo.getGraph().getNode(7));
         cities.add(Algo.getGraph().getNode(21));
         cities.add(Algo.getGraph().getNode(44));
-        List<NodeData> ans = Algo.tsp(cities);
-        assertEquals(0,ans.get(0).getKey());
-        assertEquals(2,ans.get(1).getKey());
-        assertEquals(3,ans.get(2).getKey());
-        assertEquals(13,ans.get(3).getKey());
-        assertEquals(11,ans.get(4).getKey());
-        assertEquals(7,ans.get(5).getKey());
-        assertEquals(11,ans.get(6).getKey());
-        assertEquals(13,ans.get(7).getKey());
-        assertEquals(14,ans.get(8).getKey());
-        assertEquals(29,ans.get(9).getKey());
-        assertEquals(30,ans.get(10).getKey());
-        assertEquals(31,ans.get(11).getKey());
-        assertEquals(32,ans.get(12).getKey());
-        assertEquals(21,ans.get(13).getKey());
-        assertEquals(32,ans.get(14).getKey());
-        assertEquals(31,ans.get(15).getKey());
-        assertEquals(36,ans.get(16).getKey());
-        assertEquals(37,ans.get(17).getKey());
-        assertEquals(38,ans.get(18).getKey());
-        assertEquals(39,ans.get(19).getKey());
-        assertEquals(40,ans.get(20).getKey());
-        assertEquals(41,ans.get(21).getKey());
-        assertEquals(42,ans.get(22).getKey());
-        assertEquals(43,ans.get(23).getKey());
-        assertEquals(44,ans.get(24).getKey());
+        System.out.println(Algo.tsp(cities));
+        Algo.load(nodes1000);
+        cities = new LinkedList<>();
+        cities.add(Algo.getGraph().getNode(0));
+        cities.add(Algo.getGraph().getNode(250));
+        cities.add(Algo.getGraph().getNode(500));
+        cities.add(Algo.getGraph().getNode(750));
+        cities.add(Algo.getGraph().getNode(999));
+        System.out.println(Algo.tsp(cities));
     }
 
     @org.junit.jupiter.api.Test

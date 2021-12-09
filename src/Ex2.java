@@ -11,10 +11,10 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
-    static String G3 = "Ex2/src/data/G3.json";
-    static String G2 = "Ex2/src/data/G2.json";
-    static String G1 = "Ex2/src/data/G1.json";
-    static String nodes1000 = "Ex2/src/data/1000Nodes.json";
+    static String G3 = "src/data/G3.json";
+    static String G2 = "src/data/G2.json";
+    static String G1 = "src/data/G1.json";
+    static String nodes1000 = "src/data/1000Nodes.json";
 
     public static DirectedWeightedGraph getGrapg(String json_file) {
         DirectedWeightedGraphAlgorithms algo = new DirectedWeightedGraphAlgoImpl();
@@ -44,6 +44,6 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
-        runGUI(G3);
+        runGUI(G1);
     }
 }
