@@ -1,4 +1,4 @@
-# Ex2# Ex2-OOP - DirectedWeightedGraphs
+# Ex2-OOP - DirectedWeightedGraphs
 #### Authors: Lior Shacohach & Moriya Barel
 
 In this project we were required to implement directed weighted graph, graphics user interface representation
