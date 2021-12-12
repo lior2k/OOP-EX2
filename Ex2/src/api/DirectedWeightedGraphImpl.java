@@ -46,17 +46,17 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph{
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return new mynodeIterator(this, this.MC);
+        return new MyNodeIterator(this, this.MC);
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return new myedgeIterator(this, this.MC);
+        return new MyEdgeIterator(this, this.MC);
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return new myedgeIterator(this, this.MC, node_id);
+        return new MyEdgeIterator(this, this.MC, node_id);
     }
 
     @Override

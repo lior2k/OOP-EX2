@@ -10,7 +10,7 @@ public class MyEdge implements EdgeData {
     public MyEdge(int src, int dest, double w){
         this.pair = new MyPair(src,dest);
         this.weight = w;
-        this.tag = 0xFFFFFF;
+        this.tag = 0x8E23A4;
         this.info = "from: "+src+" to: "+dest+" weight: "+w+" tag: "+tag;
     }
     public MyPair getPair(){

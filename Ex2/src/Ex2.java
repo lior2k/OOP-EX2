@@ -43,7 +43,6 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
-        //runGUI(G1);
         runGUI(args[0]);
     }
 }

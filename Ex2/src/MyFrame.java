@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -11,10 +12,12 @@ import java.util.Objects;
 public class MyFrame extends JFrame implements ActionListener {
     MyPanel panel;
     DirectedWeightedGraphAlgoImpl Algo;
+    DirectedWeightedGraphImpl graph;
 
     public MyFrame(DirectedWeightedGraphAlgoImpl algo) {
         super();
         this.Algo = algo;
+        this.graph = (DirectedWeightedGraphImpl) Algo.getGraph();
         this.setTitle("Directed Weighted Graph GUI");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -28,7 +31,7 @@ public class MyFrame extends JFrame implements ActionListener {
         this.setVisible(true);
         this.pack();
         this.setBackground(new Color(0x2FA8A8));
-    }//0x9FADBA
+    }
 
     public void init_menu() {
         JMenuBar bar = new JMenuBar();
@@ -83,62 +86,14 @@ public class MyFrame extends JFrame implements ActionListener {
         this.setJMenuBar(bar);
     }
 
-//    public void init_removeNodeAction() {
-//        JLabel label = new JLabel("Insert Key: ");
-//        label.setVisible(true);
-//        label.setBounds(40,5,200,50);
-//        JTextField textField = new JTextField();
-//        textField.setEnabled(true);
-//        textField.setEditable(true);
-//        textField.setBounds(40,50,100,50);
-//        this.add(label);
-//        this.panel.add(textField);
-//
-//        textField.addActionListener(e2 -> {
-//            textField.setVisible(true);
-//            String nodekey = textField.getText();
-//            Algo.getGraph().removeNode((Integer.parseInt(nodekey)));
-//            repaint();
-////                panel.remove(textField);
-////                panel.remove(label);
-//            textField.setVisible(false);
-//            label.setVisible(false);
-//        });
-//    }
-//
-//    public void init_addNodeAction() {
-//        System.out.println("x");
-//        JPanel panel2 = new JPanel();
-//        this.add(panel2);
-//        enter_x = new JLabel("enter x: ");
-//        key_text = new JTextField();
-//        enter_x.setVisible(true);
-//        key_text.setVisible(true);
-//        enter_x.setEnabled(true);
-//        key_text.setEnabled(true);
-//        key_text.setEditable(true);
-//        enter_x.setBounds(25,25,1000,500);
-//        key_text.setBounds(25,50,1000,500);
-//        panel2.add(enter_x);
-//        panel2.add(key_text);
-//        panel2.setVisible(true);
-//        panel2.setEnabled(true);
-//        key_text.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//            }
-//        });
-//}
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        repaint();
+        //repaint();
         String st = e.getActionCommand();
         if (Objects.equals(st, "removeNode")) {
                 String node_id_str = JOptionPane.showInputDialog("insert node id");
                 int node_id = Integer.parseInt(node_id_str);
-                Algo.getGraph().removeNode(node_id);
+                graph.removeNode(node_id);
                 repaint();
         } else if (Objects.equals(st,"addNode")) {
             String node_id_str = JOptionPane.showInputDialog("insert node id");
@@ -147,12 +102,14 @@ public class MyFrame extends JFrame implements ActionListener {
             int node_id = Integer.parseInt(node_id_str);
             double node_location_x = Double.parseDouble(node_location_x_str);
             double node_location_y = Double.parseDouble(node_location_y_str);
-            MyNode add = new MyNode(node_id, new GeoLocationImpl(node_location_x, node_location_y, 0));
-            Algo.getGraph().addNode(add);
+            this.panel.addnode(node_id, node_location_x, node_location_y);
             repaint();
         } else if (Objects.equals(st,"load")) {
             String load_filename_str = JOptionPane.showInputDialog("insert json file including location");
             Algo.load(load_filename_str);
+            graph = (DirectedWeightedGraphImpl) Algo.getGraph();
+            panel.Algo = Algo;
+            panel.graph = (DirectedWeightedGraphImpl) Algo.getGraph();
             repaint();
         } else if (Objects.equals(st, "save")) {
             String save_filename_str = JOptionPane.showInputDialog("insert filename");
@@ -162,7 +119,7 @@ public class MyFrame extends JFrame implements ActionListener {
             String remove_edge_dest_str = JOptionPane.showInputDialog("insert dest node key");
             int src_node_index = Integer.parseInt(remove_edge_src_str);
             int dest_node_index = Integer.parseInt(remove_edge_dest_str);
-            Algo.getGraph().removeEdge(src_node_index, dest_node_index);
+            graph.removeEdge(src_node_index, dest_node_index);
             repaint();
         } else if (Objects.equals(st, "connect")) {
             String src_node_index_str = JOptionPane.showInputDialog("insert src node key");
@@ -171,11 +128,12 @@ public class MyFrame extends JFrame implements ActionListener {
             int src_node_index = Integer.parseInt(src_node_index_str);
             int dest_node_index = Integer.parseInt(dest_node_index_str);
             double weight = Double.parseDouble(weight_str);
-            Algo.getGraph().connect(src_node_index, dest_node_index, weight);
+            graph.connect(src_node_index, dest_node_index, weight);
             repaint();
         } else if (Objects.equals(st, "isConnected")) {
             boolean ans = Algo.isConnected();
             JOptionPane.showMessageDialog(null, ans);
+            repaint();
         } else if (Objects.equals(st, "shortestPathDist")) {
             String src_node_str = JOptionPane.showInputDialog("insert src node key");
             String dest_node_str = JOptionPane.showInputDialog("insert dest node key");
@@ -190,9 +148,9 @@ public class MyFrame extends JFrame implements ActionListener {
             int dest_node_index = Integer.parseInt(dest_node_str);
             List<NodeData> ans = Algo.shortestPath(src_node_index, dest_node_index);
             String ans_str = "";
-            for (int i = 0; i<ans.size(); i++) {
-                MyNode n = (MyNode) ans.get(i);
-                ans_str = ans_str + n.getKey()+" ";
+            for (NodeData an : ans) {
+                MyNode n = (MyNode) an;
+                ans_str = ans_str + n.getKey() + " ";
                 n.setTag(0x00FF04);
             }
             JOptionPane.showMessageDialog(null, ans_str);
@@ -201,8 +159,8 @@ public class MyFrame extends JFrame implements ActionListener {
             MyNode n = (MyNode) Algo.center();
             int ans = n.getKey();
             n.setTag(0x00FF04);
-            JOptionPane.showMessageDialog(null, ans);
             repaint();
+            JOptionPane.showMessageDialog(null, ans);
         } else if (Objects.equals(st, "tsp")) {
             String cities_size_str = JOptionPane.showInputDialog("insert how many cities you want to visit");
             int cities_size = Integer.parseInt(cities_size_str);
@@ -210,7 +168,7 @@ public class MyFrame extends JFrame implements ActionListener {
             for (int i=1; i<cities_size+1; i++) {
                 String city_str = JOptionPane.showInputDialog("insert the "+i+"th city");
                 int city = Integer.parseInt(city_str);
-                cities.add(Algo.getGraph().getNode(city));
+                cities.add(graph.getNode(city));
             }
             List<NodeData> ans = Algo.tsp(cities);
             List<Integer> ans_int = new LinkedList<>();
@@ -224,6 +182,18 @@ public class MyFrame extends JFrame implements ActionListener {
                  ans_str = ans_str+i+" ";
             }
             JOptionPane.showMessageDialog(null, ans_str);
+        } else if (Objects.equals(st, "getNode")) {
+            String str = JOptionPane.showInputDialog("insert node key");
+            int node_key = Integer.parseInt(str);
+            graph.getNode(node_key).setTag(0xFF0000);
+            repaint();
+        } else if (Objects.equals(st, "getEdge")) {
+            String src = JOptionPane.showInputDialog("insert edge source");
+            String dest = JOptionPane.showInputDialog("insert edge dest");
+            int src_key = Integer.parseInt(src);
+            int dest_key = Integer.parseInt(dest);
+            graph.getEdge(src_key, dest_key).setTag(0xFF0000);
+            repaint();
         }
     }
 }

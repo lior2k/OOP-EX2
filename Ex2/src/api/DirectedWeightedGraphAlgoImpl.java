@@ -29,6 +29,8 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         return this.graph;
     }
 
+    //for each node in our graph we run a node copy method which returns a deep copy of the node
+    //and the node's objects (edges, geolocations)
     @Override
     public DirectedWeightedGraph copy() {
         DirectedWeightedGraph g = new DirectedWeightedGraphImpl();
@@ -39,11 +41,15 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         }
         return g;
     }
+
+    //Run BFS algorithm on an arbitrary node  n, if after performing the BFS we find a node
+    //with infinite distance it means the node was not reachable from n as well as any of n's
+    //neighbours hence return false, otherwise return true.
     @Override
     public boolean isConnected() {
-        MyNode n = (MyNode) graph.getNode(0);
-        BFS(n);
         Iterator<NodeData> iter = graph.nodeIter();
+        MyNode n = (MyNode) iter.next();
+        BFS(n);
         while (iter.hasNext()) {
             MyNode v = (MyNode) iter.next();
             if (v.getDistance() == Integer.MAX_VALUE) {
@@ -53,6 +59,8 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         return true;
     }
 
+    //run Dijkstra algorithm on source node, if the destination's node distance value is still
+    //set to infinity, return -1, otherwise return destination's node distance
     @Override
     public double shortestPathDist(int src, int dest) {
         Dijkstra((MyNode) graph.getNode(src));
@@ -63,6 +71,9 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         return shortest_dis;
     }
 
+
+    //Run Dijkstra algorithm on source node, add all nodes to a list beginning with dest > dest.prev > ... > source
+    //then reverse the list and return list
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         List<NodeData> list = new LinkedList<>();
@@ -97,19 +108,19 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         while (iter.hasNext()) {
             MyNode n = (MyNode) iter.next();
             Dijkstra(n);
-                Iterator<NodeData> iter2 = graph.nodeIter();
-                double max_dist = -1;
-                while (iter2.hasNext()) {
-                    MyNode v = (MyNode) iter2.next();
-                    if (v.getDistance() > max_dist) {
-                        max_dist = v.getDistance();
-                    }
-                }
-                if (max_dist < shortest_dist) {
-                    shortest_dist = max_dist;
-                    ans = n;
+            Iterator<NodeData> iter2 = graph.nodeIter();
+            double max_dist = -1;
+            while (iter2.hasNext()) {
+                MyNode v = (MyNode) iter2.next();
+                if (v.getDistance() > max_dist) {
+                    max_dist = v.getDistance();
                 }
             }
+            if (max_dist < shortest_dist) {
+                shortest_dist = max_dist;
+                ans = n;
+            }
+        }
         return ans;
     }
 
@@ -250,38 +261,6 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
         }
     }
 
-    private void Dijkstra_TSP(MyNode S, DirectedWeightedGraphImpl G) {
-        List<NodeData> Que = new LinkedList<>();
-        Iterator<NodeData> iter = G.nodeIter();
-        while (iter.hasNext()) {
-            MyNode n = (MyNode) iter.next();
-            n.setDistance(Integer.MAX_VALUE);
-            n.setPrev(null);
-            Que.add(n);
-        }
-        S.setDistance(0);
-        while (Que.size() > 0) {
-            int node_index = getMinDistNodeKey(Que);
-            if (node_index == -1) {
-                break;
-            }
-            MyNode u = (MyNode) graph.getNode(node_index);
-            Que.remove(u);
-            Iterator<EdgeData> EdgeIter = G.edgeIter(u.getKey());
-            while (EdgeIter.hasNext()) {
-                MyEdge e = (MyEdge) EdgeIter.next();
-                if (e.getSrc() == u.getKey()) {
-                    MyNode v = (MyNode) G.getNode(e.getDest());
-                    double dis_from_src = u.getDistance() + e.getWeight();
-                    if(dis_from_src < v.getDistance()){
-                        v.setDistance(dis_from_src);
-                        v.setPrev(u);
-                    }
-                }
-            }
-        }
-    }
-
     private int getMinDistNodeKey(List<NodeData> L) {
         int ans = -1;
         double dist = Integer.MAX_VALUE;
@@ -321,5 +300,20 @@ public class DirectedWeightedGraphAlgoImpl implements DirectedWeightedGraphAlgor
             }
             u.setTag(Black);
         }
+    }
+
+    public void init_random_graph(int nodes_amount) {
+        DirectedWeightedGraphImpl G = new DirectedWeightedGraphImpl();
+        for (int i=0; i<nodes_amount; i++) {
+            G.addNode(new MyNode(i, new GeoLocationImpl(0,0,0)));
+        }
+        Iterator<NodeData> node_iter = G.get_map().values().iterator();
+        while (node_iter.hasNext()) {
+            MyNode n = (MyNode) node_iter.next();
+            for (int i=0; i<10; i++) {
+                G.connect(n.getKey(), (int) (Math.random()*nodes_amount),0);
+            }
+        }
+        this.graph = G;
     }
 }
