@@ -73,7 +73,7 @@ Step 3: change directory to the path you just copied
 Step 4: insert the following command:
 
 ```sh
-java -jar Ex2.jar filename.json  
+java -jar Ex2.jar path\filename.json  
 ```
 
 running the tester in terminal/cmd example:
