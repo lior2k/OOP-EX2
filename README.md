@@ -63,14 +63,21 @@ We represent the graph using a hashmap, the keys of the hashmap are the vertice'
 ## How to Run:
 
 Step 1: open cmd
+
 Step 2: copy absolute path to jar file
+
 ![image](https://i.imgur.com/UgZZ9Fn.png)
+
 Step 3: change directory to the path you just followed
+
 Step 4: insert the following command:
+
 ```sh
 java -jar Ex2.jar filename.json  
 ```
+
 running the tester in terminal/cmd example:
+
 ![image](https://i.imgur.com/Asv0Ikj.png)
 
 > Note:If having trouble with save/load functions after downloading the project, please make sure you have Gson 2.8.6 library or simply add it by going to Project Structure - Libraries - gson-2.8.6 and press apply.
