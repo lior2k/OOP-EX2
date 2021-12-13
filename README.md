@@ -49,11 +49,13 @@ We represent the graph using a hashmap, the keys of the hashmap are the vertice'
 
 # Algorithms Running Times:
 
+> Note: Java ran out of space when creating graph with Million nodes.
+
 | Algorithm \ Graph size | 1000 nodes | 10000 nodes | 100000 nodes | 1000000 nodes |
 | ------ | ------ | ------ | ------ | ------ |
-| isConnected | 38 ms | 294 ms | 7 sec 286 ms | 1 min 36 sec |
+| isConnected | 38 ms | 294 ms | 7 sec 286 ms | 0 |
 | TSP | 48 ms | 1 sec 597 ms | 1 min 34 sec (3 cities) | 0 |
-| Center | 2 sec 613 ms | 10 min 37 sec | timeout | timeout |
+| Center | 2 sec 613 ms | 10 min 37 sec | timeout | 0 |
 | Shortest Path | 31 ms | 499 ms | 44 sec 763 ms | 0 |
 
 # UML:
