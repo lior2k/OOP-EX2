@@ -77,7 +77,7 @@ Step 4: insert the following command:
 ```sh
 java -jar Ex2.jar path\filename.json  
 ```
-> Note: After downloading the project you should have 3 graphs in the jar folder, G1.json / G2.json / G3.json, if you want to run another graph please provide the path to the json file directory, for example: "out/artifacts/Ex2_jar/G1.json".
+> Note: After downloading the project you should have 3 graphs in the jar folder, G1.json / G2.json / G3.json, you run them by entering their name, if you want to run another graph please provide the path to the json file directory as well as the name, for example: "out/artifacts/Ex2_jar/G1.json".
 
 running the tester in terminal/cmd example:
 
