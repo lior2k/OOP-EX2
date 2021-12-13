@@ -51,7 +51,7 @@ We represent the graph using a hashmap, the keys of the hashmap are the vertice'
 
 | Algorithm \ Graph size | 1000 nodes | 10000 nodes | 100000 nodes | 1000000 nodes |
 | ------ | ------ | ------ | ------ | ------ |
-| isConnected | 38 ms | 294 ms | 7 sec 286 ms | 0 |
+| isConnected | 38 ms | 294 ms | 7 sec 286 ms | 1 min 36 sec |
 | TSP | 48 ms | 1 sec 597 ms | 1 min 34 sec (3 cities) | 0 |
 | Center | 2 sec 613 ms | 10 min 37 sec | timeout | timeout |
 | Shortest Path | 31 ms | 499 ms | 44 sec 763 ms | 0 |
@@ -75,6 +75,7 @@ Step 4: insert the following command:
 ```sh
 java -jar Ex2.jar path\filename.json  
 ```
+> Note: After downloading the project you should have 3 graphs in the jar folder, G1.json / G2.json / G3.json, if you want to run another graph please provide the path to the json file directory, for example: "out/artifacts/Ex2_jar/G1.json".
 
 running the tester in terminal/cmd example:
 
