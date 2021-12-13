@@ -6,8 +6,7 @@ of the graph as well as applicable algorithms.
 
 ## Graph Implementation
 
-We represent the graph using a hashmap, the keys of the hashmap are the vertice's id and the values are the vertices themselfs, each vertice v holds an adjancency list with a tweak, rather than making the lists associated with each vertex v
-a hashmap of edges corresponding to the vertices adjacent to v, the keys of the adjancency hashmap are pairs p <i,j> representing the source and destination of the edge. For example:
+We represent the graph using a hashmap, the keys of the hashmap are the vertice's id and the values are the vertices themselfs, each vertice v holds an adjancency list with a tweak, each hashmap of contains edges corresponding to the vertices adjacent to v, the keys of the adjancency hashmap are pairs p <i,j> representing the source and destination of the edge. For example:
 
 ![image](https://i.imgur.com/eYPKpw7.png?1)
 
