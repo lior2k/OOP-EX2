@@ -68,7 +68,7 @@ Step 2: copy absolute path to jar file
 
 ![image](https://i.imgur.com/UgZZ9Fn.png)
 
-Step 3: change directory to the path you just followed
+Step 3: change directory to the path you just copied
 
 Step 4: insert the following command:
 
